@@ -1,0 +1,32 @@
+/* App.css or a new CSS file */
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px; /* Adjust this value to match your header's actual height */
+  background-color: #f8f8f8;
+  z-index: 1000;
+}
+
+main {
+  margin-top: 37px; /* This should match the header height */
+  flex: 1;
+}
+
+footer {
+  background-color: #f8f8f8;
+  padding: 10px 0;
+}
