@@ -1,5 +1,6 @@
 import React from "react";
 import Hero from "../../components/hero/Hero";
+import Perks from "../../components/perks/Perks";
 
 function Home() {
   return (
@@ -7,6 +8,9 @@ function Home() {
       <div className="innerWrapper">
         <div className="heroSection">
           <Hero />
+        </div>
+        <div className="perkSection">
+          <Perks />
         </div>
       </div>
     </main>
