@@ -3,6 +3,7 @@ import { GiWallet } from "react-icons/gi";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { RiCustomerService2Fill } from "react-icons/ri";
 
+
 export const links = [
   {
     name: "Home",
@@ -34,3 +35,28 @@ export const perks = [
     icon: RiCustomerService2Fill, // Reference to the component
   },
 ];
+
+export const trackRecords = [
+  {
+    name: "Years in the Market",
+    number: "5+",
+  },
+  {
+    name: "Withdrawals",
+    number: "500+ Million",
+  },
+  {
+    name: "Events",
+    number: "500+",
+  },
+  {
+    name: "Trading Assets",
+    number: "100+",
+  },
+];
+
+export const HowToInvest = [
+  {
+    icon: 
+  }
+]
