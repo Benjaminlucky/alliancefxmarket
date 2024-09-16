@@ -2,7 +2,9 @@ import { MdOutlineShield } from "react-icons/md";
 import { GiWallet } from "react-icons/gi";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { RiCustomerService2Fill } from "react-icons/ri";
-
+import { TbUserSquareRounded } from "react-icons/tb";
+import { BsBriefcaseFill } from "react-icons/bs";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 
 export const links = [
   {
@@ -55,8 +57,20 @@ export const trackRecords = [
   },
 ];
 
-export const HowToInvest = [
+export const ToInvest = [
   {
-    icon: 
-  }
-]
+    icon: TbUserSquareRounded,
+    title: "Create an Account",
+    text: "Your first step to financial freedom is by creating an account with us.",
+  },
+  {
+    icon: BsBriefcaseFill,
+    title: "Choose a Package",
+    text: "Start investing by choosing a package that suits your budget/trading strategies and easily make deposits with reliable payment channels.",
+  },
+  {
+    icon: FaMoneyBillTransfer,
+    title: "Trade",
+    text: "Once deposit is confirmed, trades can immediately be placed with instant live updates.",
+  },
+];

@@ -2,6 +2,7 @@ import React from "react";
 import Hero from "../../components/hero/Hero";
 import Perks from "../../components/perks/Perks";
 import TrackRecords from "../../components/trackrecords/TrackRecords";
+import HowToInvest from "../../components/howToInvest/HowToInvest";
 
 function Home() {
   return (
@@ -15,6 +16,9 @@ function Home() {
         </div>
         <div className="trackRecordsSection w-full mt-20 flex">
           <TrackRecords />
+        </div>
+        <div className="howToInvestSection">
+          <HowToInvest />
         </div>
       </div>
     </main>
