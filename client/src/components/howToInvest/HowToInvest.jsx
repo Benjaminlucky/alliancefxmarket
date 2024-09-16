@@ -12,7 +12,7 @@ function HowToInvest() {
       <div className="absolute w-full inset-0 bg-[url('/assets/tradeBG.jpeg')] bg-cover bg-center bg-no-repeat opacity-15"></div>
 
       {/* Content layer (z-index ensures it's on top of the background) */}
-      <div className="relative flex-col z-10 mb-10 px-5 w-full  md:w-3/5 justify-center items-center ">
+      <div className="relative flex-col z-10 mb-10 px-5 w-full md:px-0 md:w-11/12 justify-center items-center ">
         <div className="investTop text-center">
           <div className="subtitle ">
             <h4 className="text-gray-200  text-2xl  mt-10">
@@ -28,12 +28,12 @@ function HowToInvest() {
           </div>
         </div>
 
-        <div className="bottom mt-10">
+        <div className="bottom mt-20">
           <div className="list grid grid-cols-1 md:grid-cols-3 gap-6">
             {ToInvest.map((list, index) => (
               <div
                 key={index}
-                className="investList flex-col text-center py-10 px-5 justify-center p-4 bg-white rounded-lg shadow-lg hover:bg-secondary-light"
+                className="investList flex-col text-center py-10 px-5 md:px-0 justify-center  bg-white rounded-lg shadow-lg hover:bg-secondary-light"
               >
                 <div className="icon flex justify-center mb-4 text-6xl text-primary">
                   {React.createElement(list.icon)}

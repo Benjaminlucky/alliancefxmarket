@@ -5,6 +5,9 @@ import { RiCustomerService2Fill } from "react-icons/ri";
 import { TbUserSquareRounded } from "react-icons/tb";
 import { BsBriefcaseFill } from "react-icons/bs";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
+import { SiGraphql } from "react-icons/si";
+import { FiKey } from "react-icons/fi";
+import { FaBitcoin } from "react-icons/fa";
 
 export const links = [
   {
@@ -72,5 +75,23 @@ export const ToInvest = [
     icon: FaMoneyBillTransfer,
     title: "Trade",
     text: "Once deposit is confirmed, trades can immediately be placed with instant live updates.",
+  },
+];
+
+export const tradingAssets = [
+  {
+    icon: SiGraphql,
+    title: "Instant Trading",
+    text: "Deposit is confirmed immediately after successful transaction to fund the account and trading can start instantly.",
+  },
+  {
+    icon: FiKey,
+    title: "Safe and Secure",
+    text: "Encryption of account is taking to a high degree for best secure protection.",
+  },
+  {
+    icon: FaBitcoin,
+    title: "Bitcoin Transaction",
+    text: "Encryption of account is taking to a high degree for best secure protection.",
   },
 ];

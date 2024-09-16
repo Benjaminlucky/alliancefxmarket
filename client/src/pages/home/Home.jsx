@@ -3,6 +3,7 @@ import Hero from "../../components/hero/Hero";
 import Perks from "../../components/perks/Perks";
 import TrackRecords from "../../components/trackrecords/TrackRecords";
 import HowToInvest from "../../components/howToInvest/HowToInvest";
+import TradeAsset from "../../components/tradingAssets/TradeAsset";
 
 function Home() {
   return (
@@ -19,6 +20,9 @@ function Home() {
         </div>
         <div className="howToInvestSection">
           <HowToInvest />
+        </div>
+        <div className="tradeAssetSection flex justify-center w-full bg-secondary-light">
+          <TradeAsset />
         </div>
       </div>
     </main>
