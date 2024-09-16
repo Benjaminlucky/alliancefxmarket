@@ -1,5 +1,6 @@
 import React from "react";
 import { ToInvest } from "../../data";
+import { Link } from "react-router-dom";
 
 function HowToInvest() {
   return (
@@ -41,6 +42,13 @@ function HowToInvest() {
                 <p className="mt-2 text-primary">{list.text}</p>
               </div>
             ))}
+          </div>
+          <div className="button flex justify-center items-center mt-16">
+            <Link to="/">
+              <button className="rounded-full bg-secondary-light border-2 border-transparent px-20 py-5 font-bold text-1xl hover:border-2 hover:border-secondary-light hover:bg-white">
+                Get Started
+              </button>
+            </Link>
           </div>
         </div>
       </div>
