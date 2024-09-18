@@ -8,6 +8,11 @@ import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { SiGraphql } from "react-icons/si";
 import { FiKey } from "react-icons/fi";
 import { FaBitcoin } from "react-icons/fa";
+import { RiShieldKeyholeFill } from "react-icons/ri";
+import { FaAward } from "react-icons/fa6";
+import { MdBalance } from "react-icons/md";
+import { MdOutlineAutoGraph } from "react-icons/md";
+import { FaMagnifyingGlassDollar } from "react-icons/fa6";
 
 export const links = [
   {
@@ -93,5 +98,28 @@ export const tradingAssets = [
     icon: FaBitcoin,
     title: "Bitcoin Transaction",
     text: "Encryption of account is taking to a high degree for best secure protection.",
+  },
+];
+
+export const whyChoose = [
+  {
+    icon: RiShieldKeyholeFill,
+    title: "Secured & Regulated",
+  },
+  {
+    icon: FaAward,
+    title: "Award Winning",
+  },
+  {
+    icon: MdBalance,
+    title: "Leverage",
+  },
+  {
+    icon: MdOutlineAutoGraph,
+    title: "Advanced Trading Platform",
+  },
+  {
+    icon: FaMagnifyingGlassDollar,
+    title: "500+ Trading Instruments",
   },
 ];

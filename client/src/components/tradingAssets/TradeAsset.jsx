@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { tradingAssets } from "../../data";
+import { tradingAssets, whyChoose } from "../../data";
 
 function TradeAsset() {
   return (
     <div className="innerWrapper flex flex-col w-11/12 lg:w-4/5 py-10 lg:py-20 md:flex-row justify-center items-center mx-auto">
       <div className="assetContent w-full">
-        <div className="top w-full gap-10 flex flex-col md:flex-row lg:flex justify-between">
+        <div className="top w-full gap-10 flex flex-col lg:py-10 md:flex-row lg:flex justify-between">
           <div className="left flex-1">
             <div className="title">
               <h5 className="uppercase font-bold  text-xl lg:text-2xl py-3">
@@ -45,6 +45,34 @@ function TradeAsset() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+        <div className="bottom w-full mt-10 lg:mt-20  flex justify-center">
+          <div className="bottomContent w-full flex flex-col justify-center">
+            <div className="bottomTitle lg:py-5">
+              <h1 className="text-center uppercase font-extrabold text-3xl lg:font-extrabold lg:text-6xl">
+                Why Choose us
+              </h1>
+            </div>
+            <div className="whys w-full flex ">
+              <div className="whysContent mt-16 w-full  md:flex lg:flex justify-between">
+                {whyChoose.map((why, index) => (
+                  <div
+                    key={index}
+                    className="why flex gap-5 py-5 flex-col items-center justify-center"
+                  >
+                    <div className="icon flex text-4xl text-center md:text-6xl lg:text-8xl">
+                      {React.createElement(why.icon)}
+                    </div>
+                    <div className="subtitle">
+                      <p className="text-center font-semibold 2xl">
+                        {why.title}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
