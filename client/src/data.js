@@ -13,6 +13,7 @@ import { FaAward } from "react-icons/fa6";
 import { MdBalance } from "react-icons/md";
 import { MdOutlineAutoGraph } from "react-icons/md";
 import { FaMagnifyingGlassDollar } from "react-icons/fa6";
+import { FaXTwitter } from "react-icons/fa6";
 
 export const links = [
   {
@@ -121,5 +122,32 @@ export const whyChoose = [
   {
     icon: FaMagnifyingGlassDollar,
     title: "500+ Trading Instruments",
+  },
+];
+
+export const testimony = [
+  {
+    image: "../../assets/headshot1.jpg",
+    name: "Sarah M",
+    Designation: "Novice Trader",
+    testimony:
+      "I was new to forex trading and felt overwhelmed by the complexity of the market. But this company made it easy for me to get started. Their platform is user-friendly, and the educational resources are top-notch. Within a few months, I started seeing consistent profits. The support team is always available to answer my questions. I couldn’t have asked for a better trading partner!",
+    icon: FaXTwitter,
+  },
+  {
+    image: "../../assets/headshot2.jpg",
+    name: "James R",
+    Designation: "Experienced Investor",
+    testimony:
+      "Switching to this forex trading company was the best decision I made for my investment portfolio. Their advanced tools and real-time market insights have given me a significant edge in my trades. I appreciate the transparency and security they provide, which is crucial in today’s volatile markets. Highly recommended for both beginners and seasoned traders!",
+    icon: FaXTwitter,
+  },
+  {
+    image: "../../assets/headshot3.jpg",
+    name: "Emily T",
+    Designation: "Professional Trader",
+    testimony:
+      "I've been trading forex for years, but it wasn't until I joined this company that I truly started to maximize my potential. Their innovative trading strategies and automated tools have helped me make informed decisions with confidence. I also love their community of traders, where I can share ideas and get advice. It’s more than just a trading platform; it’s a comprehensive trading experience.",
+    icon: FaXTwitter,
   },
 ];

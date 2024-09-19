@@ -4,6 +4,7 @@ import Perks from "../../components/perks/Perks";
 import TrackRecords from "../../components/trackrecords/TrackRecords";
 import HowToInvest from "../../components/howToInvest/HowToInvest";
 import TradeAsset from "../../components/tradingAssets/TradeAsset";
+import TestimonialCarousel from "../../components/testimonialCarousel/TestimonialCarousel";
 
 function Home() {
   return (
@@ -23,6 +24,9 @@ function Home() {
         </div>
         <div className="tradeAssetSection flex justify-center w-full bg-secondary-light">
           <TradeAsset />
+        </div>
+        <div className="testimonialSection">
+          <TestimonialCarousel />
         </div>
       </div>
     </main>
