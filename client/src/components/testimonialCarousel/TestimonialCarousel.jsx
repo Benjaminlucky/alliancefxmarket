@@ -13,7 +13,7 @@ import "./testimonialCarousel.css";
 
 function TestimonialCarousel() {
   return (
-    <div className="innerWrapper bg-gradient-to-r from-blue-50 to-indigo-50 py-12">
+    <div className="innerWrapper bg-gradient-to-r from-blue-50 to-indigo-50 pt-2 pb-20">
       <div className="testimonialTitle mt-20 mb-20 w-full flex justify-center">
         <div className="titleContent flex-col text-center">
           <h1 className="font-extrabold text-4xl lg:text-6xl md:text-5xl">

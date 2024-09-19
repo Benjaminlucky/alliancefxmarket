@@ -1,3 +1,4 @@
+import React from "react";
 import { MdOutlineShield } from "react-icons/md";
 import { GiWallet } from "react-icons/gi";
 import { FaExclamationTriangle } from "react-icons/fa";
@@ -149,5 +150,74 @@ export const testimony = [
     testimony:
       "I've been trading forex for years, but it wasn't until I joined this company that I truly started to maximize my potential. Their innovative trading strategies and automated tools have helped me make informed decisions with confidence. I also love their community of traders, where I can share ideas and get advice. It’s more than just a trading platform; it’s a comprehensive trading experience.",
     icon: FaXTwitter,
+  },
+];
+
+export const difference = [
+  {
+    id: 1,
+    point: (
+      <>
+        <span className="font-bold text-white">We Want You to Succeed</span> –
+        Learn from the best with our wide range of educational tools, economic
+        calendar, technical and fundamental analysis and important market
+        updates you don’t want to miss.
+      </>
+    ),
+  },
+  {
+    id: 2,
+    point: (
+      <>
+        <span className="font-bold text-white">
+          We Believe in Endless Possibilities{" "}
+        </span>
+         - Access the world’s most popular instruments, ranging from forex pairs
+        to cryptocurrencies - all at the palm of your hand.
+      </>
+    ),
+  },
+  {
+    id: 3,
+    point: (
+      <>
+        <span className="font-bold text-white">
+          We Provide Our Traders With Superior Trading Conditions
+        </span>
+         - No restrictions on short selling and scalping as well as ultra-low
+        spreads.
+      </>
+    ),
+  },
+  {
+    id: 4,
+    point: (
+      <>
+        <span className="font-bold text-white">We Value Your Time</span>– Enjoy
+        Fast and reliable order execution and a 24-hour live customer service.
+      </>
+    ),
+  },
+  {
+    id: 5,
+    point: (
+      <>
+        <span className="font-bold text-white">
+          We Believe You Deserve The Best
+        </span>
+         – Take advantage of our Expert Advisors and Copy Trading platforms as
+        well as 24/7 cryptocurrency trading.
+      </>
+    ),
+  },
+  {
+    id: 6,
+    point: (
+      <>
+        <span className="font-bold text-white">We Never Compromise</span> – With
+        regulatory licenses across 6 jurisdictions, we will ensure a hassle-free
+        trading experience.
+      </>
+    ),
   },
 ];

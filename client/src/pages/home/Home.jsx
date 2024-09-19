@@ -5,6 +5,7 @@ import TrackRecords from "../../components/trackrecords/TrackRecords";
 import HowToInvest from "../../components/howToInvest/HowToInvest";
 import TradeAsset from "../../components/tradingAssets/TradeAsset";
 import TestimonialCarousel from "../../components/testimonialCarousel/TestimonialCarousel";
+import Different from "../../components/different/Different";
 
 function Home() {
   return (
@@ -27,6 +28,9 @@ function Home() {
         </div>
         <div className="testimonialSection">
           <TestimonialCarousel />
+        </div>
+        <div className="differentSection flex bg-primary text-white">
+          <Different />
         </div>
       </div>
     </main>
