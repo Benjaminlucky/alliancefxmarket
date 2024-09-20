@@ -6,6 +6,7 @@ import HowToInvest from "../../components/howToInvest/HowToInvest";
 import TradeAsset from "../../components/tradingAssets/TradeAsset";
 import TestimonialCarousel from "../../components/testimonialCarousel/TestimonialCarousel";
 import Different from "../../components/different/Different";
+import Help from "../../components/help/Help";
 
 function Home() {
   return (
@@ -31,6 +32,9 @@ function Home() {
         </div>
         <div className="differentSection flex bg-primary text-white">
           <Different />
+        </div>
+        <div className="helpSection">
+          <Help />
         </div>
       </div>
     </main>
