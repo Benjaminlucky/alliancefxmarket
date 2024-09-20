@@ -7,6 +7,7 @@ import TradeAsset from "../../components/tradingAssets/TradeAsset";
 import TestimonialCarousel from "../../components/testimonialCarousel/TestimonialCarousel";
 import Different from "../../components/different/Different";
 import Help from "../../components/help/Help";
+import Trusted from "../../components/trusted/Trusted";
 
 function Home() {
   return (
@@ -35,6 +36,9 @@ function Home() {
         </div>
         <div className="helpSection">
           <Help />
+        </div>
+        <div className="trustedSection w-full flex justify-center">
+          <Trusted />
         </div>
       </div>
     </main>
