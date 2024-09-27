@@ -19,7 +19,7 @@ function Home() {
         <div className="perkSection w-full  bg-white">
           <Perks />
         </div>
-        <div className="trackRecordsSection w-full mt-20 flex">
+        <div className="trackRecordsSection w-full flex">
           <TrackRecords />
         </div>
         <div className="howToInvestSection">

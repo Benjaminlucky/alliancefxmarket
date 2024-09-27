@@ -1,0 +1,16 @@
+[build]
+  command = "npm run build"
+  publish = "dist"  # Ensure this is your Vite build output folder
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[headers]
+  # Ensure the correct MIME type for JavaScript files
+  [[headers.values]]
+    for = "/*.js"
+    values = {
+      "Content-Type" = "application/javascript"
+    }

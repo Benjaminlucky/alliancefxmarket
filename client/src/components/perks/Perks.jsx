@@ -4,7 +4,7 @@ import { perks } from "../../data";
 function Perks() {
   return (
     <div className="perksWrapper flex w-full bg-white items-center justify-center">
-      <div className="perkContent flex flex-col sm:w-11/12 md:grid md:grid-cols-2 lg:flex-row lg:w-4/5 py-8 px-10 mt-10 bg-white justify-between items-center drop-shadow-lg rounded-md">
+      <div className="perkContent flex flex-col sm:w-11/12 md:grid md:grid-cols-2 lg:flex-row lg:w-4/5 py-8 px-10  bg-white justify-between items-center drop-shadow-lg rounded-md">
         {perks.map((perk, index) => (
           <div
             key={index}
