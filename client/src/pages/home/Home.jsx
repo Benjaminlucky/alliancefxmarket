@@ -16,7 +16,7 @@ function Home() {
         <div className="heroSection">
           <Hero />
         </div>
-        <div className="perkSection w-full mt-20">
+        <div className="perkSection w-full mt-20 bg-white">
           <Perks />
         </div>
         <div className="trackRecordsSection w-full mt-20 flex">
