@@ -37,7 +37,7 @@ function Home() {
         <div className="helpSection">
           <Help />
         </div>
-        <div className="trustedSection w-full flex justify-center">
+        <div className="trustedSection justify-center">
           <Trusted />
         </div>
       </div>

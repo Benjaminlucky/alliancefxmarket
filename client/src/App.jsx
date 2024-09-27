@@ -5,6 +5,8 @@ import Header from "./components/header/Header";
 import Company from "./pages/company/Company";
 import Footer from "./components/footer/Footer";
 import "./App.css";
+import Signup from "./pages/signup/Signup";
+import "flowbite/dist/flowbite.css";
 
 function Layout({ children }) {
   return (
@@ -33,6 +35,14 @@ function App() {
           element={
             <Layout>
               <Company />
+            </Layout>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <Layout>
+              <Signup />
             </Layout>
           }
         />

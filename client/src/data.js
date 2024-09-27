@@ -221,3 +221,63 @@ export const difference = [
     ),
   },
 ];
+
+export const usefulLinks = [
+  {
+    name: "Home",
+    link: "/",
+  },
+  {
+    name: "About",
+    link: "/about",
+  },
+  {
+    name: "Plans",
+    link: "/plans",
+  },
+  {
+    name: "Login",
+    link: "/login",
+  },
+  {
+    name: "Register",
+    link: "/register",
+  },
+  {
+    name: "Contact",
+    link: "/contact",
+  },
+];
+
+export const documents = [
+  {
+    name: "Terms & Conditions",
+    link: "#",
+  },
+  {
+    name: "Privacy Policy",
+    link: "#",
+  },
+  {
+    name: "Trading Assets",
+    link: "#",
+  },
+  {
+    name: "Payment Policy",
+    link: "#",
+  },
+  {
+    name: "FAQ",
+    link: "#",
+  },
+];
+
+export const contact = [
+  {
+    address:
+      "Alliancefx Markets, 70 w. Madison Street, Ste. 1400 Chicago, 1160602",
+  },
+  {
+    address: "support@alliancefxmarket.com",
+  },
+];

@@ -2,8 +2,9 @@
 module.exports = {
   content: [
     "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}", // This includes all JS/JSX/TS/TSX files in src folder
+    "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}", // Flowbite-react content
+    "./node_modules/flowbite/**/*.js", // Flowbite's vanilla JS components (optional)
   ],
   theme: {
     extend: {
