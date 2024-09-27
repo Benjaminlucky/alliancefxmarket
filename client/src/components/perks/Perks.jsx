@@ -14,7 +14,7 @@ function Perks() {
             <span className="flex items-center justify-center text-center text-6xl lg:text-6xl ">
               {React.createElement(perk.icon)}
             </span>
-            <h4 className="text-3xl lg:text-3xl font-bold text-center leading-10 text-white">
+            <h4 className="text-3xl lg:text-3xl font-bold text-center leading-10">
               {perk.name}
             </h4>
           </div>

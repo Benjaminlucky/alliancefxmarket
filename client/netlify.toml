@@ -1,16 +1,24 @@
 [build]
-  command = "npm run build"
-  publish = "dist"  # Ensure this is your Vite build output folder
+  command = "npm run build --prefix client"  # This tells Netlify to run the build command in the client directory
+  publish = "client/dist"                    # Set the correct output directory
+
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Content-Type = "application/javascript"
+
+[[headers]]
+  for = "/*.jsx"
+  [headers.values]
+    Content-Type = "application/javascript"
+
+[[headers]]
+  for = "/*.mjs"
+  [headers.values]
+    Content-Type = "application/javascript"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[headers]
-  # Ensure the correct MIME type for JavaScript files
-  [[headers.values]]
-    for = "/*.js"
-    values = {
-      "Content-Type" = "application/javascript"
-    }
