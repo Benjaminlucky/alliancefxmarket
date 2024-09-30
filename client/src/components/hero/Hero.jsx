@@ -19,7 +19,7 @@ function Hero() {
             </h3>
           </div>
           <div className="heroButtons flex w-full gap-5 justify-center mt-5 px-5 md:mt-12">
-            <Link to="/">
+            <Link to="/signup">
               <button className="bg-secondary-light py-3 px-6 font-semibold md:py-5 md:px-12 md:text-3xl text-xl lg:px-7 lg:py-4 text-primary border-2 border-transparent rounded-full lg:text-2xl lg:font-bold hover:bg-transparent hover:text-white hover:border-white">
                 Get Started
               </button>
