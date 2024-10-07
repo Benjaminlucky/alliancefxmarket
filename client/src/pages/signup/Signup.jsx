@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./signup.css";
 import { Checkbox, Label, TextInput } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
@@ -6,25 +6,34 @@ import { FaUserCircle } from "react-icons/fa";
 import { HiPhone } from "react-icons/hi";
 import { FaIdCardClip } from "react-icons/fa6";
 import { RiLockPasswordFill } from "react-icons/ri";
-
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "../../lib/utils.js";
-import { Button } from "../../components/ui/CustomUIComponents";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "../../components/ui/CustomUIComponents";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../components/ui/CustomUIComponents";
+import Select from "react-select";
+import countryList from "react-select-country-list";
+import Flag from "react-world-flags"; // Import flag library
 import { testimony } from "../../data.js";
+import { Link } from "react-router-dom";
 
 function Signup() {
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  // Add flex display for the flag and country name
+  const options = countryList()
+    .getData()
+    .map((country) => ({
+      value: country.value,
+      label: (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Flag
+            code={country.value}
+            style={{ width: "20px", marginRight: "10px" }}
+          />
+          <span>{country.label}</span>
+        </div>
+      ),
+    }));
+
+  const handleChange = (value) => {
+    setSelectedCountry(value);
+  };
   return (
     <div className="innerWrapper max-w-full flex justify-center bg-black text-white">
       <div className="innerContent flex flex-col md:flex-col lg:flex-row gap-20 w-4/5 py-20 ">
@@ -40,145 +49,171 @@ function Signup() {
             </div>
             <div className="bottom w-full">
               <form action="" className="w-full">
+                {/* Full Name Field */}
                 <div className="max-w-2xl mt-3 flex flex-col">
-                  <div className="mb-2 block">
-                    <Label
-                      htmlFor="email4"
-                      value="Full Name"
-                      className="text-white"
+                  <Label htmlFor="full-name" className="text-white pb-3">
+                    Full Name
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <FaUserCircle className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    </div>
+                    <input
+                      id="full-name"
+                      type="text"
+                      className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="Elon Musk"
                     />
                   </div>
-                  <TextInput
-                    id="email4"
-                    type="email"
-                    icon={FaUserCircle}
-                    placeholder="Elon Musk"
-                    required
-                    className="text-2xl font-bold"
-                  />
                 </div>
+
+                {/* Username Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
-                  <div className="mb-2 block">
-                    <Label
-                      htmlFor="email4"
-                      value="Username"
-                      className="text-white"
+                  <Label htmlFor="username" className="text-white pb-3">
+                    Username
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <FaIdCardClip className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    </div>
+                    <input
+                      id="username"
+                      type="text"
+                      className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="elonmus79"
                     />
                   </div>
-                  <TextInput
-                    id="email4"
-                    type="email"
-                    icon={FaIdCardClip}
-                    placeholder="elonmus79"
-                    required
-                    className="text-2xl font-bold"
-                  />
                 </div>
+
+                {/* Email Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
-                  <div className="mb-2 block">
-                    <Label
-                      htmlFor="email4"
-                      value="Email"
-                      className="text-white"
+                  <Label htmlFor="email" className="text-white pb-3">
+                    Email
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <HiMail className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    </div>
+                    <input
+                      id="email"
+                      type="email"
+                      className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="elon@example.com"
                     />
                   </div>
-                  <TextInput
-                    id="email4"
-                    type="email"
-                    icon={HiMail}
-                    placeholder="elon@example.com"
-                    required
-                    className="text-2xl font-bold"
-                  />
                 </div>
+
+                {/* Phone Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
-                  <div className="mb-2 block">
-                    <Label
-                      htmlFor="email4"
-                      value="Phone"
-                      className="text-white"
+                  <Label htmlFor="phone" className="text-white pb-3">
+                    Phone
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <HiPhone className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    </div>
+                    <input
+                      id="phone"
+                      type="tel"
+                      className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="+1 0678 9088 787"
                     />
                   </div>
-                  <TextInput
-                    id="email4"
-                    type="email"
-                    icon={HiPhone}
-                    placeholder="+1 0678 9088 787"
-                    required
-                    className="text-2xl font-bold"
-                  />
                 </div>
+
+                {/* Country Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
-                  <div className="mb-2 block">
-                    <Label
-                      htmlFor="email4"
-                      value="Country"
-                      className="text-white"
+                  <Label htmlFor="country" className="text-white pb-3">
+                    Country
+                  </Label>
+                  <div className="relative max-w-2xl mt-5 flex flex-col">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <HiPhone className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    </div>
+                    <Select
+                      id="country"
+                      options={options}
+                      value={selectedCountry}
+                      onChange={handleChange}
+                      className="text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg"
+                      placeholder="Select your country"
                     />
                   </div>
-                  <TextInput
-                    id="email4"
-                    type="email"
-                    icon={HiPhone}
-                    placeholder="United States"
-                    required
-                    className="text-2xl font-bold"
-                  />
                 </div>
+
+                {/* Password Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
-                  <div className="mb-2 block">
-                    <Label
-                      htmlFor="email4"
-                      value="Password"
-                      className="text-white"
+                  <Label htmlFor="password" className="text-white pb-3">
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <RiLockPasswordFill className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    </div>
+                    <input
+                      id="password"
+                      type="password"
+                      className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="******"
                     />
                   </div>
-                  <TextInput
-                    id="email4"
-                    type="email"
-                    icon={RiLockPasswordFill}
-                    placeholder="******"
-                    required
-                    className="text-2xl font-bold"
-                  />
                 </div>
+
+                {/* Confirm Password Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
-                  <div className="mb-2 block">
-                    <Label
-                      htmlFor="email4"
-                      value="Confirm Password"
-                      className="text-white"
+                  <Label htmlFor="confirm-password" className="text-white pb-3">
+                    Confirm Password
+                  </Label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <RiLockPasswordFill className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    </div>
+                    <input
+                      id="confirm-password"
+                      type="password"
+                      className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder="******"
                     />
                   </div>
-                  <TextInput
-                    id="email4"
-                    type="email"
-                    icon={RiLockPasswordFill}
-                    placeholder="******"
-                    required
-                    className="text-2xl font-bold"
-                  />
                 </div>
-                <div
-                  className="flex max-w-md flex-col gap-4 mt-10"
-                  id="checkbox"
-                >
+
+                {/* Checkbox for Terms and Conditions */}
+                <div className="flex max-w-md flex-col gap-4 mt-10">
                   <div className="flex items-center gap-2">
                     <Checkbox
                       id="accept"
                       defaultChecked
                       className="text-primary-light"
                     />
-                    <Label htmlFor="accept" className="flex text-gray-400">
+                    <Label htmlFor="accept" className="flex text-gray-400 pb-3">
                       I agree with the&nbsp;
                       <a
                         href="#"
-                        className="text-primary-light hover:underline "
+                        className="text-primary-light hover:underline"
                       >
                         terms and conditions
                       </a>
                     </Label>
                   </div>
+                </div>
+                <div className="flex max-w-md gap-4 mt-2">
+                  <span className="text-gray-500">
+                    Already have an Account ?{" "}
+                  </span>
+                  <Link
+                    to="/signin"
+                    className="hover:underline text-secondary-light"
+                  >
+                    Sign in
+                  </Link>
+                </div>
+                <div className="button">
+                  <button
+                    type="button"
+                    class="text-white w-full mt-5  bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center me-2 mb-2"
+                  >
+                    Create Account
+                  </button>
                 </div>
               </form>
             </div>

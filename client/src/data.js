@@ -237,11 +237,11 @@ export const usefulLinks = [
   },
   {
     name: "Login",
-    link: "/login",
+    link: "/signin",
   },
   {
     name: "Register",
-    link: "/register",
+    link: "/signup",
   },
   {
     name: "Contact",
