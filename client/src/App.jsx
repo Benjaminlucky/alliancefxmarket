@@ -8,6 +8,7 @@ import "./App.css";
 import Signup from "./pages/signup/Signup";
 import "flowbite/dist/flowbite.css";
 import Signin from "./pages/sign/Signin";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 function Layout({ children }) {
   return (
@@ -52,6 +53,14 @@ function App() {
           element={
             <Layout>
               <Signin />
+            </Layout>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <Layout>
+              <Dashboard />
             </Layout>
           }
         />

@@ -15,6 +15,13 @@ import { MdBalance } from "react-icons/md";
 import { MdOutlineAutoGraph } from "react-icons/md";
 import { FaMagnifyingGlassDollar } from "react-icons/fa6";
 import { FaXTwitter } from "react-icons/fa6";
+import { MdDashboard } from "react-icons/md";
+import { RiSecurePaymentFill } from "react-icons/ri";
+import { BiCoinStack } from "react-icons/bi";
+import { FaWallet } from "react-icons/fa";
+import { FaPiggyBank } from "react-icons/fa6";
+import { IoIosPeople } from "react-icons/io";
+import { MdTableChart } from "react-icons/md";
 
 export const links = [
   {
@@ -279,5 +286,48 @@ export const contact = [
   },
   {
     address: "support@alliancefxmarket.com",
+  },
+];
+
+export const dashnavigation = [
+  {
+    label: "Dashboard",
+    link: "/dashboard",
+    icon: MdDashboard,
+  },
+  {
+    label: "Make Payment",
+    link: "/payments",
+    icon: RiSecurePaymentFill,
+  },
+  {
+    label: "Invest with Profit",
+    link: "/invest",
+    icon: BiCoinStack,
+  },
+  {
+    label: "Earning",
+    link: "/earning",
+    icon: FaWallet,
+  },
+  {
+    label: "Investment",
+    link: "/investment",
+    icon: FaPiggyBank,
+  },
+  {
+    label: "Referral",
+    link: "/referral",
+    icon: IoIosPeople,
+  },
+  {
+    label: "Plans",
+    link: "/plans",
+    icon: MdTableChart,
+  },
+  {
+    label: "Withdrawals",
+    link: "/withdrawal",
+    icon: FaMoneyBillTransfer,
   },
 ];
