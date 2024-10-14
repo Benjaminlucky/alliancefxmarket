@@ -1,6 +1,8 @@
 body {
-  background-color: black;
+  /*background-color: black;*/
 }
+
+/* You can adjust the z-index if needed */
 
 /* Default link styles */
 .link {
@@ -43,4 +45,15 @@ body {
 
 .menu-toggle:hover {
   background-color: gray;
+}
+
+.avatar {
+  /* Optional: Adjust the size */
+  width: 5rem !important; /* 20 in Tailwind (5 * 4px) */
+  height: 5rem !important; /* 20 in Tailwind (5 * 4px) */
+  border-radius: 50%; /* Ensures a perfect circle */
+}
+
+.avatar img {
+  object-fit: cover; /* Ensures the image covers the whole container */
 }
