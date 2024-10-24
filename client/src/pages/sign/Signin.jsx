@@ -1,34 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./signin.css";
-import { Checkbox, Label, TextInput } from "flowbite-react";
+import { Checkbox, Label } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
-import { FaUserCircle } from "react-icons/fa";
-import { HiPhone } from "react-icons/hi";
-import { FaIdCardClip } from "react-icons/fa6";
 import { RiLockPasswordFill } from "react-icons/ri";
-
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "../../lib/utils.js";
-import { Button } from "../../components/ui/CustomUIComponents";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "../../components/ui/CustomUIComponents";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../components/ui/CustomUIComponents";
-import { testimony } from "../../data.js";
 import { Link } from "react-router-dom";
+import { testimony } from "../../data.js";
 
-function Signin() {
+function Signin({ setIsAuthenticated }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get the path user was trying to access before being redirected to sign-in
+  const from = location.state?.from?.pathname || "/dashboard"; // default to dashboard if no previous route
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // Simulate successful login (replace with actual logic)
+    const isSuccess = true;
+
+    if (isSuccess) {
+      setIsAuthenticated(true); // Set authenticated state
+      localStorage.setItem("isAuthenticated", "true"); // Store the state in localStorage
+      navigate(from, { replace: true }); // Redirect to the page the user originally tried to access
+    }
+  };
+
   return (
     <div className="innerWrapper max-w-full flex justify-center bg-black text-white">
-      <div className="innerContent flex flex-col md:flex-col lg:flex-row gap-20 w-4/5 mt-20 py-20 ">
+      <div className="innerContent flex flex-col md:flex-col lg:flex-row gap-20 w-4/5 mt-20 py-20">
         <div className="left flex-2 items-start">
           <div className="leftContent">
             <div className="top py-10">
@@ -36,11 +36,11 @@ function Signin() {
                 Welcome Back!
               </h2>
               <p className="text-secondary-light text-2xl mt-3">
-                Sign In to get back to get to your Dashboard...
+                Sign In to get back to your Dashboard...
               </p>
             </div>
             <div className="bottom w-full">
-              <form action="" className="w-full">
+              <form onSubmit={handleLogin} className="w-full">
                 {/* Email Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
                   <div className="mb-2 block">
@@ -109,10 +109,9 @@ function Signin() {
                     </Label>
                   </div>
                 </div>
+
                 <div className="flex max-w-md gap-4 mt-2">
-                  <span className="text-gray-500">
-                    Don't have an Account ?{" "}
-                  </span>
+                  <span className="text-gray-500">Don't have an Account?</span>
                   <Link
                     to="/signup"
                     className="hover:underline text-secondary-light"
@@ -120,21 +119,23 @@ function Signin() {
                     Sign Up
                   </Link>
                 </div>
+
                 <div className="button">
-                  <Link to="/dashboard">
-                    <button
-                      type="button"
-                      class="text-white w-full mt-5  bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center me-2 mb-2"
-                    >
-                      Sign In
-                    </button>
-                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleLogin} // Call handleSignIn on click
+                    className="text-white w-full mt-5 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center me-2 mb-2"
+                  >
+                    Sign In
+                  </button>
                 </div>
               </form>
             </div>
           </div>
         </div>
-        <div className="right flex-1 w-full  bg-white rounded-lg">
+
+        {/* Testimonials Section */}
+        <div className="right flex-1 w-full bg-white rounded-lg">
           <div className="rightContent p-10">
             <div className="top">
               <div className="rightTopContent">

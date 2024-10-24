@@ -20,12 +20,12 @@ body {
 .link:hover,
 .link:hover .icon {
   color: #eaf27c;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 /* Active link styles */
 .active {
-  color: #eaf27c; /* Active link text color */
+  color: #eaf27c !important; /* Active link text color */
   font-weight: bold;
 }
 
@@ -45,15 +45,4 @@ body {
 
 .menu-toggle:hover {
   background-color: gray;
-}
-
-.avatar {
-  /* Optional: Adjust the size */
-  width: 5rem !important; /* 20 in Tailwind (5 * 4px) */
-  height: 5rem !important; /* 20 in Tailwind (5 * 4px) */
-  border-radius: 50%; /* Ensures a perfect circle */
-}
-
-.avatar img {
-  object-fit: cover; /* Ensures the image covers the whole container */
 }

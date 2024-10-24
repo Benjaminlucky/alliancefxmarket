@@ -24,7 +24,7 @@ header {
 }
 
 main {
-  margin-top: 37px; /* This should match the header height */
+  /* margin-top: 37px; /* This should match the header height */
   flex: 1;
 }
 
