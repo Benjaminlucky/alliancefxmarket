@@ -312,11 +312,6 @@ export const dashnavigation = [
     icon: FaWallet,
   },
   {
-    label: "Investment",
-    link: "/investment",
-    icon: FaPiggyBank,
-  },
-  {
     label: "Referral",
     link: "/referral",
     icon: IoIosPeople,
