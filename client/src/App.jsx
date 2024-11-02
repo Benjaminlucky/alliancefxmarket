@@ -18,6 +18,7 @@ import LayoutWithHeader from "./components/layoutoutwithheader/LayoutWithHeader"
 import "./App.css";
 import Referral from "./pages/dashboard/referral/Referral";
 import Plans from "./pages/dashboard/plans/Plans";
+import Withdrawal from "./pages/dashboard/withdrawal/Withdrawal";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -59,6 +60,7 @@ function App() {
             <Route path="earning" element={<Earning />} />
             <Route path="referral" element={<Referral />} />
             <Route path="plans" element={<Plans />} />
+            <Route path="withdrawal" element={<Withdrawal />} />
           </Route>
 
           {/* Catch-all route to redirect to /dashboard */}
