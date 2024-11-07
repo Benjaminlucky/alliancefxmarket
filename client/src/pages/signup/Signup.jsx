@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./signup.css";
 import { Checkbox, Label, TextInput } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
@@ -14,8 +15,16 @@ import { Link } from "react-router-dom";
 
 function Signup() {
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    username: "",
+    email: "",
+    phone: "",
+    country: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-  // Add flex display for the flag and country name
   const options = countryList()
     .getData()
     .map((country) => ({
@@ -31,8 +40,38 @@ function Signup() {
       ),
     }));
 
-  const handleChange = (value) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleCountryChange = (value) => {
     setSelectedCountry(value);
+    setFormData((prev) => ({
+      ...prev,
+      country: value ? value.label : "",
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/user/signup",
+        formData
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error("Signup failed:", error.response?.data || error.message);
+    }
   };
   return (
     <div className="innerWrapper max-w-full flex justify-center bg-black text-white">
@@ -48,7 +87,7 @@ function Signup() {
               </p>
             </div>
             <div className="bottom w-full">
-              <form action="" className="w-full">
+              <form action="" className="w-full" onSubmit={handleSubmit}>
                 {/* Full Name Field */}
                 <div className="max-w-2xl mt-3 flex flex-col">
                   <Label htmlFor="full-name" className="text-white pb-3">
@@ -59,10 +98,13 @@ function Signup() {
                       <FaUserCircle className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     </div>
                     <input
-                      id="full-name"
+                      id="fullName"
+                      name="fullName"
                       type="text"
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       placeholder="Elon Musk"
+                      onChange={handleChange}
+                      value={formData.fullName}
                     />
                   </div>
                 </div>
@@ -78,9 +120,12 @@ function Signup() {
                     </div>
                     <input
                       id="username"
+                      name="username"
                       type="text"
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       placeholder="elonmus79"
+                      onChange={handleChange}
+                      value={formData.username}
                     />
                   </div>
                 </div>
@@ -96,9 +141,12 @@ function Signup() {
                     </div>
                     <input
                       id="email"
+                      name="email"
                       type="email"
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       placeholder="elon@example.com"
+                      onChange={handleChange}
+                      value={formData.email}
                     />
                   </div>
                 </div>
@@ -115,8 +163,11 @@ function Signup() {
                     <input
                       id="phone"
                       type="tel"
+                      name="phone"
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       placeholder="+1 0678 9088 787"
+                      onChange={handleChange}
+                      value={formData.phone}
                     />
                   </div>
                 </div>
@@ -132,9 +183,10 @@ function Signup() {
                     </div>
                     <Select
                       id="country"
+                      name="country"
                       options={options}
                       value={selectedCountry}
-                      onChange={handleChange}
+                      onChange={handleCountryChange}
                       className="text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg"
                       placeholder="Select your country"
                     />
@@ -152,9 +204,12 @@ function Signup() {
                     </div>
                     <input
                       id="password"
+                      name="password"
                       type="password"
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       placeholder="******"
+                      onChange={handleChange}
+                      value={formData.password}
                     />
                   </div>
                 </div>
@@ -169,10 +224,13 @@ function Signup() {
                       <RiLockPasswordFill className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     </div>
                     <input
-                      id="confirm-password"
+                      id="confirmPassword"
+                      name="confirmPassword"
                       type="password"
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       placeholder="******"
+                      onChange={handleChange}
+                      value={formData.confirmPassword}
                     />
                   </div>
                 </div>
@@ -209,8 +267,8 @@ function Signup() {
                 </div>
                 <div className="button">
                   <button
-                    type="button"
-                    class="text-white w-full mt-5  bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center me-2 mb-2"
+                    type="submit"
+                    className="text-white w-full mt-5  bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center me-2 mb-2"
                   >
                     Create Account
                   </button>
