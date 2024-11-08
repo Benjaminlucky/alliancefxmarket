@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./signup.css";
-import { Checkbox, Label, TextInput } from "flowbite-react";
+import { Checkbox, Label, TextInput, Spinner } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
 import { FaUserCircle } from "react-icons/fa";
 import { HiPhone } from "react-icons/hi";
@@ -24,6 +24,10 @@ function Signup() {
     password: "",
     confirmPassword: "",
   });
+
+  const [loading, setLoading] = useState(false); // Track loading state
+  const [responseMessage, setResponseMessage] = useState(""); // To hold success or error message
+  const [errorMessages, setErrorMessages] = useState([]); // For error messages
 
   const options = countryList()
     .getData()
@@ -52,7 +56,7 @@ function Signup() {
     setSelectedCountry(value);
     setFormData((prev) => ({
       ...prev,
-      country: value ? value.label : "",
+      country: value ? value.value : "", // Use only `value`
     }));
   };
 
@@ -63,16 +67,27 @@ function Signup() {
       return;
     }
 
+    setLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:3000/user/signup",
         formData
       );
-      console.log(response.data);
+      // On success, display the success message
+      setResponseMessage(response.data.message);
+      setErrorMessages([]); // Clear previous errors
     } catch (error) {
-      console.error("Signup failed:", error.response?.data || error.message);
+      // On failure, split the error message into individual errors and display them
+      if (error.response?.data?.error) {
+        const errors = error.response.data.error.split(", ");
+        setErrorMessages(errors); // Store the errors as an array
+      }
+      setResponseMessage(""); // Clear any success messages
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div className="innerWrapper max-w-full flex justify-center bg-black text-white">
       <div className="innerContent flex flex-col md:flex-col lg:flex-row gap-20 w-4/5 py-20 ">
@@ -265,14 +280,38 @@ function Signup() {
                     Sign in
                   </Link>
                 </div>
+                {/* Submit Button */}
                 <div className="button">
                   <button
                     type="submit"
-                    className="text-white w-full mt-5  bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center me-2 mb-2"
+                    className="text-white w-full mt-5 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center me-2 mb-2"
+                    disabled={loading} // Disable the button while loading
                   >
-                    Create Account
+                    {loading ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <Spinner size="sm" />
+                        <span>Submitting...</span>
+                      </div>
+                    ) : (
+                      "Create Account"
+                    )}
                   </button>
                 </div>
+                {responseMessage && (
+                  <div className="response-message mt-4 text-white">
+                    {responseMessage}
+                  </div>
+                )}
+
+                {errorMessages && (
+                  <div className="error-messages mt-4 text-red-500">
+                    <ul>
+                      {errorMessages.map((error, index) => (
+                        <li key={index}>{error}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </form>
             </div>
           </div>
