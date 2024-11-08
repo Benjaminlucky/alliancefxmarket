@@ -70,7 +70,7 @@ function Signup() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:3000/user/signup",
+        "https://alliancefxmarket.onrender.com/user/signup",
         formData
       );
       // On success, display the success message
