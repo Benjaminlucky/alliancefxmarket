@@ -1,6 +1,6 @@
 [build]
   command = "npm run build --prefix client"  # This tells Netlify to run the build command in the client directory
-  publish = "client/dist"                    # Set the correct output directory
+  publish = "dist"                    # Set the correct output directory
 
 
 [[headers]]
