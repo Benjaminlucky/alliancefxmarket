@@ -1,28 +1,53 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./signin.css";
-import { Checkbox, Label } from "flowbite-react";
+import { Checkbox, Label, Spinner } from "flowbite-react"; // Import Spinner
 import { HiMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { testimony } from "../../data.js";
+import axios from "axios";
 
 function Signin({ setIsAuthenticated }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Get the path user was trying to access before being redirected to sign-in
-  const from = location.state?.from?.pathname || "/dashboard"; // default to dashboard if no previous route
+  const from = location.state?.from?.pathname || "/dashboard";
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simulate successful login (replace with actual logic)
-    const isSuccess = true;
+    setError(null);
+    setSuccess(null);
+    setLoading(true);
 
-    if (isSuccess) {
-      setIsAuthenticated(true); // Set authenticated state
-      localStorage.setItem("isAuthenticated", "true"); // Store the state in localStorage
-      navigate(from, { replace: true }); // Redirect to the page the user originally tried to access
+    try {
+      console.log("Sending login request with:", { email, password }); // Log the data being sent
+
+      const response = await axios.post("http://localhost:3000/user/signin", {
+        email,
+        password,
+      });
+
+      console.log("Response:", response.data); // Log the response from the server
+
+      if (response.data.success) {
+        setSuccess("Login successful! Redirecting...");
+        localStorage.setItem("isAuthenticated", "true");
+        setIsAuthenticated(true);
+        setTimeout(() => navigate(from, { replace: true }), 1500);
+      } else {
+        setError(response.data.message || "Login failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Login error:", error); // Log the full error
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,6 +84,8 @@ function Signin({ setIsAuthenticated }) {
                       type="email"
                       placeholder="elon@example.com"
                       required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
@@ -82,6 +109,8 @@ function Signin({ setIsAuthenticated }) {
                       type="password"
                       placeholder="******"
                       required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
@@ -120,15 +149,24 @@ function Signin({ setIsAuthenticated }) {
                   </Link>
                 </div>
 
-                <div className="button">
+                <div className="button mt-5">
                   <button
-                    type="button"
-                    onClick={handleLogin} // Call handleSignIn on click
-                    className="text-white w-full mt-5 bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center me-2 mb-2"
+                    type="submit"
+                    disabled={loading}
+                    className="text-white w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center"
                   >
-                    Sign In
+                    {loading ? <Spinner size="sm" color="white" /> : "Sign In"}
                   </button>
                 </div>
+                {/* Success and Error Messages */}
+                {error && (
+                  <div className="text-red-500 font-semibold mt-4">{error}</div>
+                )}
+                {success && (
+                  <div className="text-green-500 font-semibold mt-4">
+                    {success}
+                  </div>
+                )}
               </form>
             </div>
           </div>

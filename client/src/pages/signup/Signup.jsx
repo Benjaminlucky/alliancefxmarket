@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import bcrypt from "bcryptjs";
 import "./signup.css";
 import { Checkbox, Label, TextInput, Spinner } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
@@ -62,32 +63,45 @@ function Signup() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
 
+    // Hash the password
+    const hashedPassword = bcrypt.hashSync(formData.password, 10);
+
+    const formDataWithHashedPassword = {
+      ...formData,
+      password: hashedPassword, // Replace plain password with hashed password
+    };
+
     setLoading(true);
+
     try {
       const response = await axios.post(
         "https://alliancefxmarket.onrender.com/user/signup",
-        formData
+        formDataWithHashedPassword, // Send the modified form data
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
-      // On success, display the success message
+
       setResponseMessage(response.data.message);
-      setErrorMessages([]); // Clear previous errors
+      setErrorMessages([]);
     } catch (error) {
-      // On failure, split the error message into individual errors and display them
       if (error.response?.data?.error) {
         const errors = error.response.data.error.split(", ");
-        setErrorMessages(errors); // Store the errors as an array
+        setErrorMessages(errors);
       }
-      setResponseMessage(""); // Clear any success messages
+      setResponseMessage("");
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="innerWrapper max-w-full flex justify-center bg-black text-white">
       <div className="innerContent flex flex-col md:flex-col lg:flex-row gap-20 w-4/5 py-20 ">

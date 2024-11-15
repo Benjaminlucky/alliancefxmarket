@@ -45,7 +45,7 @@ function App() {
 
           {/* Protected Dashboard routes */}
           <Route
-            path="/dashboard"
+            path="/dashboard/*"
             element={
               isAuthenticated ? (
                 <Dashboardlayout />
@@ -63,8 +63,8 @@ function App() {
             <Route path="withdrawal" element={<Withdrawal />} />
           </Route>
 
-          {/* Catch-all route to redirect to /dashboard */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          {/* Catch-all route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </LayoutWithHeader>
     </Router>
