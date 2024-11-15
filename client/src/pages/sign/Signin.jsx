@@ -158,7 +158,13 @@ function Signin({ setIsAuthenticated }) {
                     disabled={loading}
                     className="text-white w-full bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-5 py-3.5 text-center"
                   >
-                    {loading ? <Spinner size="sm" color="white" /> : "Sign In"}
+                    {loading ? (
+                      <>
+                        <Spinner size="sm" color="white" /> Signing in...
+                      </>
+                    ) : (
+                      "Sign In"
+                    )}
                   </button>
                 </div>
                 {/* Success and Error Messages */}
