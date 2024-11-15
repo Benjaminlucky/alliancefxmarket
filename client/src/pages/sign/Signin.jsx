@@ -28,10 +28,13 @@ function Signin({ setIsAuthenticated }) {
     try {
       console.log("Sending login request with:", { email, password }); // Log the data being sent
 
-      const response = await axios.post("http://localhost:3000/user/signin", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://alliancefxmarket.onrender.com/user/signup",
+        {
+          email,
+          password,
+        }
+      );
 
       console.log("Response:", response.data); // Log the response from the server
 
