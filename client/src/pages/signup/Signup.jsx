@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+
 import "./signup.css";
 import { Checkbox, Label, TextInput, Spinner } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
@@ -72,7 +73,7 @@ function Signup() {
 
     try {
       const response = await axios.post(
-        "https://alliancefxmarket-frontend.onrender.com/user/signup",
+        "https://alliancefxmarket.onrender.com/user/signup",
         formData, // Send form data without hashing the password
         {
           headers: {
