@@ -29,7 +29,7 @@ function Signin({ setIsAuthenticated }) {
       console.log("Sending login request with:", { email, password }); // Log the data being sent
 
       const response = await axios.post(
-        "https://alliancefxmarket.onrender.com/user/signin",
+        "https://alliancefxmarket-1.onrender.com/user/signin",
         {
           email,
           password,
