@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import bcrypt from "bcryptjs";
 import "./signup.css";
 import { Checkbox, Label, TextInput, Spinner } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
@@ -69,20 +68,12 @@ function Signup() {
       return;
     }
 
-    // Hash the password
-    const hashedPassword = bcrypt.hashSync(formData.password, 10);
-
-    const formDataWithHashedPassword = {
-      ...formData,
-      password: hashedPassword, // Replace plain password with hashed password
-    };
-
     setLoading(true);
 
     try {
       const response = await axios.post(
         "https://alliancefxmarket.onrender.com/user/signup",
-        formDataWithHashedPassword, // Send the modified form data
+        formData, // Send form data without hashing the password
         {
           headers: {
             "Content-Type": "application/json",
@@ -102,6 +93,7 @@ function Signup() {
       setLoading(false);
     }
   };
+
   return (
     <div className="innerWrapper max-w-full flex justify-center bg-black text-white">
       <div className="innerContent flex flex-col md:flex-col lg:flex-row gap-20 w-4/5 py-20 ">
