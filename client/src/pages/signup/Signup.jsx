@@ -72,7 +72,7 @@ function Signup() {
 
     try {
       const response = await axios.post(
-        "https://alliancefxmarket-1.onrender.com/user/signup",
+        "https://alliancefxmarket-frontend.onrender.com/user/signup",
         formData, // Send form data without hashing the password
         {
           headers: {
