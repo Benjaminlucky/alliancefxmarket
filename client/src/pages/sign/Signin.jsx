@@ -26,28 +26,21 @@ function Signin({ setIsAuthenticated }) {
     setLoading(true);
 
     try {
-      console.log("Sending login request with:", { email, password }); // Log the data being sent
-
       const response = await axios.post(
         "https://alliancefxmarket.onrender.com/user/signin",
-        {
-          email,
-          password,
-        }
+        { email, password }
       );
-
-      console.log("Response:", response.data); // Log the response from the server
 
       if (response.data.success) {
         setSuccess("Login successful! Redirecting...");
         localStorage.setItem("isAuthenticated", "true");
         setIsAuthenticated(true);
-        setTimeout(() => navigate(from, { replace: true }), 1500);
+        navigate(from, { replace: true });
       } else {
         setError(response.data.message || "Login failed. Please try again.");
       }
     } catch (error) {
-      console.error("Login error:", error); // Log the full error
+      console.error("Login error:", error);
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
