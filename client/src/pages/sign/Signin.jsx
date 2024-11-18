@@ -35,7 +35,7 @@ function Signin({ setIsAuthenticated }) {
         setSuccess("Login successful! Redirecting...");
         localStorage.setItem("isAuthenticated", "true");
         setIsAuthenticated(true);
-        navigate(from, { replace: true });
+        setTimeout(() => navigate(from, { replace: true }), 1500);
       } else {
         setError(response.data.message || "Login failed. Please try again.");
       }
