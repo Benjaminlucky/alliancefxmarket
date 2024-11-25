@@ -21,27 +21,31 @@ function Signin({ setIsAuthenticated }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://alliancefxmarket.onrender.com/user/signin",
-        { email, password }
-      );
+      const response = await fetch("http://localhost:3000/user/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-      if (response.data.success) {
-        setSuccess("Login successful! Redirecting...");
-        localStorage.setItem("isAuthenticated", "true");
-        setIsAuthenticated(true);
-        setTimeout(() => navigate(from, { replace: true }), 1500);
+      const data = await response.json();
+      console.log("API Response:", data);
+
+      if (data.success) {
+        const { user_id, token, fullName } = data; // Corrected to destructure fullName directly from 'data'
+        localStorage.setItem("userId", user_id);
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("isAuthenticated", true);
+        localStorage.setItem("fullName", fullName); // Store fullName correctly
+        navigate("/dashboard");
       } else {
-        setError(response.data.message || "Login failed. Please try again.");
+        setError(data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("An error occurred. Please try again.");
+      setError("An error occurred during login.");
     } finally {
       setLoading(false);
     }

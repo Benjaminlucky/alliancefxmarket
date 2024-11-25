@@ -12,10 +12,11 @@ import Select from "react-select";
 import countryList from "react-select-country-list";
 import Flag from "react-world-flags"; // Import flag library
 import { testimony } from "../../data.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Signup() {
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const navigate = useNavigate(); // Initialize navigate hook
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -72,23 +73,39 @@ function Signup() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "https://alliancefxmarket.onrender.com/user/signup",
-        formData, // Send form data without hashing the password
         {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(formData),
         }
       );
 
-      setResponseMessage(response.data.message);
-      setErrorMessages([]);
-    } catch (error) {
-      if (error.response?.data?.error) {
-        const errors = error.response.data.error.split(", ");
-        setErrorMessages(errors);
+      if (!response.ok) {
+        // If the response is not OK, throw an error
+        const errorData = await response.json();
+        const errorMsg = errorData.error || "An error occurred.";
+        setErrorMessages([errorMsg]);
+        setResponseMessage("");
+        setLoading(false);
+        return;
       }
+
+      const responseData = await response.json();
+      console.log(responseData);
+
+      // Show success message
+      setResponseMessage(responseData.message);
+      setErrorMessages([]);
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000); // Redirect after a short delay
+    } catch (error) {
+      console.error(error);
+      setErrorMessages(["An unexpected error occurred."]);
       setResponseMessage("");
     } finally {
       setLoading(false);
@@ -305,7 +322,7 @@ function Signup() {
                   </button>
                 </div>
                 {responseMessage && (
-                  <div className="response-message mt-4 text-white">
+                  <div className="response-message mt-4 text-green-500">
                     {responseMessage}
                   </div>
                 )}

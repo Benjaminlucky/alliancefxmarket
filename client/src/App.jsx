@@ -15,10 +15,12 @@ import Payments from "./pages/dashboard/Payments";
 import Dashboardlayout from "./pages/dashboard/layout/Dashboardlayout";
 import Company from "./pages/company/Company";
 import LayoutWithHeader from "./components/layoutoutwithheader/LayoutWithHeader";
-import "./App.css";
 import Referral from "./pages/dashboard/referral/Referral";
 import Plans from "./pages/dashboard/plans/Plans";
 import Withdrawal from "./pages/dashboard/withdrawal/Withdrawal";
+import { UserProvider } from "./components/profile/UserContext";
+
+// Import the UserProvider
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -31,6 +33,7 @@ function App() {
   }, []);
 
   return (
+    // Wrap the entire Router with UserProvider
     <Router>
       <LayoutWithHeader>
         <Routes>
