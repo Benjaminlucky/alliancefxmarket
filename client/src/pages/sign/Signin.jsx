@@ -23,8 +23,14 @@ function Signin({ setIsAuthenticated }) {
     e.preventDefault();
     setLoading(true);
 
+    // Determine the backend URL based on the environment
+    const API_BASE_URL =
+      window.location.origin === "http://localhost:5173"
+        ? "http://localhost:3000" // Local backend URL
+        : "https://alliancefxmarket.onrender.com"; // Production backend URL
+
     try {
-      const response = await fetch("http://localhost:3000/user/signin", {
+      const response = await fetch(`${API_BASE_URL}/user/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
