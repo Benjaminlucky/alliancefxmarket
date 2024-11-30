@@ -23,33 +23,40 @@ function Profile() {
       setAuthToken(storedAuthToken);
 
       // Fetch user verification status
-      const fetchUserStatus = async () => {
+      const getUserStatus = async () => {
         const API_BASE_URL =
           window.location.origin === "http://localhost:5173"
-            ? "http://localhost:3000" // Development backend
-            : "https://alliancefxmarket.onrender.com"; // Production backend
+            ? "http://localhost:3000"
+            : "https://alliancefxmarket.onrender.com";
+
+        const token = localStorage.getItem("authToken"); // Retrieve token from localStorage
+
+        if (!token) {
+          throw new Error("No auth token found");
+        }
 
         try {
           const response = await fetch(`${API_BASE_URL}/user/status`, {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${storedAuthToken}`,
+              Authorization: `Bearer ${token}`, // Include token
+              "Content-Type": "application/json",
             },
           });
 
           if (!response.ok) {
-            throw new Error("Failed to fetch user status.");
+            throw new Error(`HTTP error! Status: ${response.status}`);
           }
 
           const data = await response.json();
-          setIsVerified(data.isVerified); // Update the isVerified state
+          return data;
         } catch (error) {
           console.error("Error fetching user status:", error);
-          navigate("/signin");
+          throw error;
         }
       };
 
-      fetchUserStatus();
+      getUserStatus();
     }
   }, [navigate]);
 
