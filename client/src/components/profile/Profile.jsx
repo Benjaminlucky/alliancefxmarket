@@ -31,27 +31,26 @@ function Profile() {
 
         const token = localStorage.getItem("authToken"); // Retrieve token from localStorage
 
-        if (!token) {
-          throw new Error("No auth token found");
-        }
-
         try {
           const response = await fetch(`${API_BASE_URL}/user/status`, {
             method: "GET",
             headers: {
-              Authorization: `Bearer ${token}`, // Include token
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           });
 
           if (!response.ok) {
+            if (response.status === 0) {
+              throw new Error("CORS issue or server is unreachable.");
+            }
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
 
           const data = await response.json();
           return data;
         } catch (error) {
-          console.error("Error fetching user status:", error);
+          console.error("Error fetching user status:", error.message);
           throw error;
         }
       };
