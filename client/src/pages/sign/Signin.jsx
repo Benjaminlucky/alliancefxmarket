@@ -38,9 +38,16 @@ function Signin({ setIsAuthenticated }) {
     try {
       const response = await fetch(`${API_BASE_URL}/user/signin`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email, password }),
       });
+
+      if (!response.ok) {
+        // Handle HTTP errors (e.g., 401 Unauthorized, 500 Internal Server Error)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
 
@@ -60,7 +67,7 @@ function Signin({ setIsAuthenticated }) {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("An error occurred during login.");
+      setError(error.message || "An error occurred during login.");
     } finally {
       setLoading(false);
     }
