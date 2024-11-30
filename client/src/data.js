@@ -293,7 +293,7 @@ export const contact = [
 export const dashnavigation = [
   {
     label: "Dashboard",
-    link: "/dashboard",
+    link: "/",
     icon: MdDashboard,
   },
   {

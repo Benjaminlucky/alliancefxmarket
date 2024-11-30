@@ -6,6 +6,7 @@ import { HiMail } from "react-icons/hi";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { testimony } from "../../data.js";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import eye icons for toggle
 import axios from "axios";
 
 function Signin({ setIsAuthenticated }) {
@@ -15,19 +16,24 @@ function Signin({ setIsAuthenticated }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [loading, setLoading] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
 
   const from = location.state?.from?.pathname || "/dashboard";
 
+  // Inside your handleLogin function
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Determine the backend URL based on the environment
     const API_BASE_URL =
       window.location.origin === "http://localhost:5173"
-        ? "http://localhost:3000" // Local backend URL
-        : "https://alliancefxmarket.onrender.com"; // Production backend URL
+        ? "http://localhost:3000"
+        : "https://alliancefxmarket.onrender.com";
 
     try {
       const response = await fetch(`${API_BASE_URL}/user/signin`, {
@@ -37,14 +43,19 @@ function Signin({ setIsAuthenticated }) {
       });
 
       const data = await response.json();
-      console.log("API Response:", data);
 
       if (data.success) {
-        const { user_id, token, fullName } = data; // Corrected to destructure fullName directly from 'data'
+        // Store the login data (token, user info, etc.)
+        const { user_id, token, fullName } = data;
         localStorage.setItem("userId", user_id);
         localStorage.setItem("authToken", token);
         localStorage.setItem("isAuthenticated", true);
-        localStorage.setItem("fullName", fullName); // Store fullName correctly
+        localStorage.setItem("fullName", fullName); // Storing user details
+
+        // Log to check the token
+        console.log("Auth Token stored:", localStorage.getItem("authToken"));
+
+        // Redirect to the dashboard after successful login
         navigate("/dashboard");
       } else {
         setError(data.message || "Login failed");
@@ -112,16 +123,25 @@ function Signin({ setIsAuthenticated }) {
                     </div>
                     <input
                       id="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"} // Toggle between text and password
                       placeholder="******"
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
+                    <div
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    >
+                      {showPassword ? (
+                        <AiOutlineEyeInvisible className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                      ) : (
+                        <AiOutlineEye className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                      )}
+                    </div>
                   </div>
                 </div>
-
                 {/* Checkbox for Terms and Conditions */}
                 <div
                   className="flex max-w-md flex-col gap-4 mt-10"

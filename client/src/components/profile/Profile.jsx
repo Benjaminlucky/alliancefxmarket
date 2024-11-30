@@ -4,21 +4,47 @@ import { useNavigate } from "react-router-dom";
 function Profile() {
   const navigate = useNavigate();
   const [userFullName, setUserFullName] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
+  const [isVerified, setIsVerified] = useState(false); // State for email verification
   const [isResending, setIsResending] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
-    // Check if user is logged in by verifying localStorage
-    const userFullName = localStorage.getItem("fullName");
-    const authToken = localStorage.getItem("authToken");
+    // Check if user is logged in and fetch verification status
+    const storedFullName = localStorage.getItem("fullName");
+    const storedAuthToken = localStorage.getItem("authToken");
 
-    if (!authToken || !userFullName) {
+    if (!storedAuthToken || !storedFullName) {
       console.log("User is not logged in. Redirecting to login.");
       navigate("/signin");
     } else {
-      // Set the userFullName from localStorage
-      setUserFullName(userFullName);
+      setUserFullName(storedFullName);
+      setAuthToken(storedAuthToken);
+
+      // Fetch user verification status
+      const fetchUserStatus = async () => {
+        try {
+          const response = await fetch("http://localhost:3000/user/status", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${storedAuthToken}`,
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch user status.");
+          }
+
+          const data = await response.json();
+          setIsVerified(data.isVerified); // Update the isVerified state
+        } catch (error) {
+          console.error("Error fetching user status:", error);
+          navigate("/signin");
+        }
+      };
+
+      fetchUserStatus();
     }
   }, [navigate]);
 
@@ -28,29 +54,57 @@ function Profile() {
     navigate("/signin");
   };
 
-  const resendVerificationEmail = async () => {
+  const handleResendVerification = async () => {
+    setIsResending(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    if (!authToken) {
+      setError("Authentication token is missing. Please sign in again.");
+      setIsResending(false);
+      return;
+    }
+
+    const API_BASE_URL =
+      window.location.origin === "http://localhost:5173"
+        ? "http://localhost:3000"
+        : "https://alliancefxmarket.onrender.com";
+
     try {
-      setIsResending(true);
-      setError(null);
+      const response = await fetch(`${API_BASE_URL}/user/resend-verification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
 
-      const email = localStorage.getItem("userEmail"); // Assuming you store email in localStorage
+      const contentType = response.headers.get("Content-Type");
+      let result;
 
-      if (email) {
-        const response = await axios.post(
-          "http://localhost:3000/user/resend-verification",
-          { email }
+      if (contentType && contentType.includes("application/json")) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+        console.error("Unexpected response format:", text);
+        throw new Error("Unexpected response format from the server.");
+      }
+
+      if (response.ok) {
+        setSuccessMessage(
+          result.message || "Verification email sent successfully."
         );
 
-        if (response.data.success) {
-          setSuccessMessage(
-            "Verification email has been resent. Please check your inbox."
-          );
-        } else {
-          setError(response.data.error);
-        }
+        // Redirect to dashboard after successful verification
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000); // Redirect after 2 seconds
+      } else {
+        setError(result.error || "Failed to resend verification email.");
       }
     } catch (error) {
-      setError(error.response?.data?.error || "An error occurred");
+      console.error("Unexpected error:", error);
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsResending(false);
     }
@@ -71,13 +125,13 @@ function Profile() {
             <p className="text-gray-400 text-sm md:text-xl">
               Track your Investment Journey here
             </p>
-            {!localStorage.getItem("isVerified") && (
-              <div className="verificationAlert text-yellow-500 p-3 rounded-lg">
+            {!isVerified && (
+              <div className="verificationAlert bg-secondary-light mt-5 p-4 text-black rounded-lg">
                 <p>Please verify your email to fully activate your account.</p>
                 <button
-                  onClick={resendVerificationEmail}
+                  onClick={handleResendVerification}
                   disabled={isResending}
-                  className="text-blue-500 hover:underline"
+                  className="text-black font-bold text-2xl hover:underline"
                 >
                   {isResending ? "Resending..." : "Resend Verification Email"}
                 </button>

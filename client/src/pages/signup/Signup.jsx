@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import "./signup.css";
 import { Checkbox, Label, TextInput, Spinner } from "flowbite-react";
 import { HiMail } from "react-icons/hi";
@@ -30,6 +30,7 @@ function Signup() {
   const [loading, setLoading] = useState(false); // Track loading state
   const [responseMessage, setResponseMessage] = useState(""); // To hold success or error message
   const [errorMessages, setErrorMessages] = useState([]); // For error messages
+  const [showPassword, setShowPassword] = useState(false); // Password visibility toggle
 
   const options = countryList()
     .getData()
@@ -233,10 +234,11 @@ function Signup() {
                 </div>
 
                 {/* Password Field */}
+                {/* Password Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
-                  <Label htmlFor="password" className="text-white pb-3">
+                  <label htmlFor="password" className="text-white pb-3">
                     Password
-                  </Label>
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                       <RiLockPasswordFill className="w-5 h-5 text-gray-500 dark:text-gray-400" />
@@ -244,20 +246,30 @@ function Signup() {
                     <input
                       id="password"
                       name="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       placeholder="******"
                       onChange={handleChange}
                       value={formData.password}
                     />
+                    <div
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? (
+                        <AiOutlineEye className="w-5 h-5 text-gray-500" />
+                      ) : (
+                        <AiOutlineEyeInvisible className="w-5 h-5 text-gray-500" />
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 {/* Confirm Password Field */}
                 <div className="max-w-2xl mt-5 flex flex-col">
-                  <Label htmlFor="confirm-password" className="text-white pb-3">
+                  <label htmlFor="confirmPassword" className="text-white pb-3">
                     Confirm Password
-                  </Label>
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                       <RiLockPasswordFill className="w-5 h-5 text-gray-500 dark:text-gray-400" />
@@ -265,12 +277,22 @@ function Signup() {
                     <input
                       id="confirmPassword"
                       name="confirmPassword"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       className="block w-full pl-10 p-2.5 text-sm font-bold bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       placeholder="******"
                       onChange={handleChange}
                       value={formData.confirmPassword}
                     />
+                    <div
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                    >
+                      {showPassword ? (
+                        <AiOutlineEye className="w-5 h-5 text-gray-500" />
+                      ) : (
+                        <AiOutlineEyeInvisible className="w-5 h-5 text-gray-500" />
+                      )}
+                    </div>
                   </div>
                 </div>
 
