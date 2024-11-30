@@ -9,6 +9,7 @@ function Profile() {
   const [isResending, setIsResending] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     // Check if user is logged in and fetch verification status
@@ -41,17 +42,18 @@ function Profile() {
           });
 
           if (!response.ok) {
-            if (response.status === 0) {
-              throw new Error("CORS issue or server is unreachable.");
-            }
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            const errorText = await response.text();
+            console.error(`Fetch error: ${response.status}`, errorText);
+            throw new Error(`HTTP Error: ${response.status} - ${errorText}`);
           }
 
           const data = await response.json();
-          return data;
+          setIsVerified(data?.isVerified || false);
         } catch (error) {
           console.error("Error fetching user status:", error.message);
-          throw error;
+          setError("An error occurred while fetching the user status.");
+        } finally {
+          setLoading(false); // Stop loading after the status is fetched
         }
       };
 
@@ -121,6 +123,10 @@ function Profile() {
     }
   };
 
+  if (loading) {
+    return <div>Loading...</div>; // Show loading until status is fetched
+  }
+
   if (!userFullName) {
     return <div>Loading...</div>; // Show loading until fullName is fetched
   }
@@ -130,9 +136,7 @@ function Profile() {
       <div className="profileWrapper flex justify-between items-center">
         <div className="profileLeft">
           <div className="profileDetails">
-            <h2 className="font-bold text-2xl text-white">
-              {`Hello ${userFullName}`}
-            </h2>
+            <h2 className="font-bold text-2xl text-white">{`Hello ${userFullName}`}</h2>
             <p className="text-gray-400 text-sm md:text-xl">
               Track your Investment Journey here
             </p>
