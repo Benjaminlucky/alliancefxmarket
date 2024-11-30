@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Signup from "./pages/signup/Signup";
@@ -23,6 +24,7 @@ import { UserProvider } from "./components/profile/UserContext";
 // Import the UserProvider
 
 function App() {
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("isAuthenticated") === "true"
   );
@@ -31,6 +33,15 @@ function App() {
     const authState = localStorage.getItem("isAuthenticated") === "true";
     setIsAuthenticated(authState);
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      navigate("/signin");
+    }
+  }, [navigate]);
 
   return (
     // Wrap the entire Router with UserProvider
