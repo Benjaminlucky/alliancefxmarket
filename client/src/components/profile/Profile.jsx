@@ -24,8 +24,13 @@ function Profile() {
 
       // Fetch user verification status
       const fetchUserStatus = async () => {
+        const API_BASE_URL =
+          window.location.origin === "http://localhost:5173"
+            ? "http://localhost:3000" // Development backend
+            : "https://alliancefxmarket.onrender.com"; // Production backend
+
         try {
-          const response = await fetch("http://localhost:3000/user/status", {
+          const response = await fetch(`${API_BASE_URL}/user/status`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${storedAuthToken}`,
