@@ -45,18 +45,16 @@ function Signin({ setIsAuthenticated }) {
       const data = await response.json();
 
       if (data.success) {
-        // Store the login data (token, user info, etc.)
         const { user_id, token, fullName } = data;
+
+        // Save token and user details to localStorage
         localStorage.setItem("userId", user_id);
         localStorage.setItem("authToken", token);
         localStorage.setItem("isAuthenticated", true);
-        localStorage.setItem("fullName", fullName); // Storing user details
+        localStorage.setItem("fullName", fullName);
 
-        // Log to check the token
-        console.log("Auth Token stored:", localStorage.getItem("authToken"));
-
-        // Redirect to the dashboard after successful login
-        navigate("/dashboard");
+        setIsAuthenticated(true); // Update auth state
+        navigate(from); // Redirect to the protected page
       } else {
         setError(data.message || "Login failed");
       }
