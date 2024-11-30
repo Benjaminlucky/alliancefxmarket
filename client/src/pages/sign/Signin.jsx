@@ -66,15 +66,6 @@ function Signin({ setIsAuthenticated }) {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      navigate("/signin");
-    }
-  }, [navigate]);
-
   return (
     <div className="innerWrapper max-w-full flex justify-center bg-black text-white">
       <div className="innerContent flex flex-col md:flex-col lg:flex-row gap-20 w-4/5 mt-20 py-20">
