@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { wallets } from "../../data";
-import Profile from "../../components/profile/profile";
+import Profile from "../../components/profile/Profile";
 
 function Payments() {
   const [copiedIndex, setCopiedIndex] = useState(null); // State for copying
