@@ -4,13 +4,10 @@ const initialState = {
   fullName: localStorage.getItem("fullName") || "", // Load full name from storage
   authToken: localStorage.getItem("authToken") || null, // Load token from storage
   isVerified: localStorage.getItem("isVerified") === "true" || false, // Convert to boolean
-<<<<<<< HEAD
-=======
   // Password reset state
   loading: false,
   success: false,
   error: null,
->>>>>>> 50399e5 (Track client and server folders along with project configuration files)
 };
 
 const userSlice = createSlice({
