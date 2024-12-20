@@ -1,0 +1,41 @@
+.swiper-button-next,
+.swiper-button-prev {
+  width: 35px; /* Adjust the width of the button area */
+  height: 35px; /* Adjust the height of the button area */
+  background-color: rgba(11, 0, 51, 0.9); /* Semi-transparent background */
+  border-radius: 50%; /* Makes the buttons circular */
+  color: white; /* Arrow color */
+  font-weight: 600;
+}
+
+.swiper-button-next {
+  right: 10px; /* Adjust this value to move the right arrow */
+}
+
+.swiper-button-prev {
+  left: 10px; /* Adjust this value to move the left arrow */
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 1rem; /* Adjust the size of the arrow icon */
+}
+
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background-color: #0b0033;
+  opacity: 0.5;
+  margin-top: 2rem;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
+@media screen and (max-width: 640px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none;
+  }
+}
