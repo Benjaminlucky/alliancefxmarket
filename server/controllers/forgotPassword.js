@@ -32,7 +32,7 @@ export const forgotPassword = async (req, res) => {
 
     // Send reset email via Postmark
     await postmarkClient.sendEmail({
-      From: "info@glamandessence.com", // Update with your verified sender email in Postmark
+      From: `"AllianceFX Market" <info@glamandessence.com>`, // Update with your verified sender email in Postmark
       To: user.email,
       Subject: "Password Reset Request",
       HtmlBody: `
