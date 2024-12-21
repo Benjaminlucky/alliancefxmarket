@@ -46,7 +46,7 @@ export const resetPassword = async (req, res) => {
       To: email,
       Subject: "Your password has been reset",
       HtmlBody: `<html><body><p>Dear ${user.fullName},</p><p>Your password has been successfully reset.</p><p>If you did not request this change, please contact support immediately.</p></body></html>`,
-      TextBody: `Dear ${user.name},\n\nYour password has been successfully reset.\n\nIf you did not request this change, please contact support immediately.`,
+      TextBody: `Dear ${user.fullName},\n\nYour password has been successfully reset.\n\nIf you did not request this change, please contact support immediately.`,
     });
 
     // Send success response

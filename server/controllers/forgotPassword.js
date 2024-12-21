@@ -27,7 +27,7 @@ export const forgotPassword = async (req, res) => {
     await user.save();
 
     // Generate the password reset URL with the token
-    const resetURL = `${process.env.CLIENT_URL}/resetpassword/${resetToken}?email=${encodeURIComponent(user.email)}`;
+    const resetURL = `${process.env.CLIENT_URL || "https://alliancefxmarket.netlify.app/"}/resetpassword/${resetToken}?email=${encodeURIComponent(user.email)}`;
 
 
     // Send reset email via Postmark
