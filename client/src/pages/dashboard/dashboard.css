@@ -1,0 +1,48 @@
+body {
+  /*background-color: black;*/
+}
+
+/* You can adjust the z-index if needed */
+
+/* Default link styles */
+.link {
+  color: white;
+  font-weight: normal;
+  transition: color 0.3s, font-weight 0.3s;
+}
+
+.link .icon {
+  color: white; /* Icon default color */
+  transition: color 0.3s;
+}
+
+/* Hover effect */
+.link:hover,
+.link:hover .icon {
+  color: #eaf27c;
+  /*font-weight: bold;*/
+}
+
+/* Active link styles */
+.active {
+  color: #eaf27c !important; /* Active link text color */
+  font-weight: bold;
+}
+
+.active .icon {
+  color: #eaf27c; /* Active link icon color */
+}
+
+.menu-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  color: #eaf27c;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: black;
+}
+
+.menu-toggle:hover {
+  background-color: gray;
+}

@@ -1,0 +1,20 @@
+.ticker__section {
+    width: 100%; /* Set width to 100% to span across the entire container */
+    overflow: hidden; /* Hide anything outside of the container */
+  }
+  
+  #ticker {
+    display: inline-block;
+    white-space: nowrap; /* Prevent wrapping of ticker items */
+    animation: ticker-scroll 10s linear infinite; /* Apply scrolling animation */
+  }
+  
+  @keyframes ticker-scroll {
+    0% {
+      transform: translateX(100%); /* Start from the right side */
+    }
+    100% {
+      transform: translateX(-100%); /* End at the left side */
+    }
+  }
+  
