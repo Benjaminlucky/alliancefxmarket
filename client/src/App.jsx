@@ -24,6 +24,12 @@ import Forgotpassword from "./pages/forgotpassword/Forgotpassword";
 import Resetpassword from "./pages/resetpassword/Resetpassword";
 import Terms from "./pages/terms/Terms";
 import Privacy from "./pages/privacy/Privacy";
+import Admin from "./pages/admin/Admin";
+import Admindashboard from "./pages/admin/dashboard/Admindashboard";
+import Adminusers from "./pages/admin/dashboard/Adminusers";
+import AdminPayments from "./pages/admin/dashboard/adminPayments";
+import Admininvestments from "./pages/admin/dashboard/Admininvestments";
+import Adminplans from "./pages/admin/dashboard/Adminplans";
 
 // Import the UserProvider
 
@@ -50,11 +56,22 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgotpassword" element={<Forgotpassword />} />
           <Route path="/resetpassword/:token" element={<Resetpassword />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admindashboard" element={<Admindashboard />} />
+          <Route path="/adminDashboard/manageUsers" element={<Adminusers />} />
+          <Route
+            path="/adminDashboard/managePayments"
+            element={<AdminPayments />}
+          />
+          <Route
+            path="/adminDashboard/manageInvestments"
+            element={<Admininvestments />}
+          />
+          <Route path="/adminDashboard/managePlans" elements={<Adminplans />} />
           <Route
             path="/signin"
             element={<Signin setIsAuthenticated={setIsAuthenticated} />}
           />
-
           {/* Protected Dashboard routes */}
           <Route
             path="/dashboard/*"
@@ -74,7 +91,6 @@ function App() {
             <Route path="plans" element={<Plans />} />
             <Route path="withdrawal" element={<Withdrawal />} />
           </Route>
-
           {/* Catch-all route */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

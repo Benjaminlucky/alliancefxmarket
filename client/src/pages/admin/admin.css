@@ -1,0 +1,9 @@
+input:focus {
+  border: none !important;
+  outline: none !important;
+}
+
+input {
+  border: none;
+  outline: none;
+}

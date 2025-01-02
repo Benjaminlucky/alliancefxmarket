@@ -718,3 +718,49 @@ export const asset = [
     ),
   },
 ];
+
+import { MdSpaceDashboard } from "react-icons/md";
+import { ImUsers } from "react-icons/im";
+import { MdOutlinePayments } from "react-icons/md";
+import { BsGraphUpArrow } from "react-icons/bs";
+
+import { RiLogoutCircleRLine } from "react-icons/ri";
+
+export const adminDashboardLinks = [
+  {
+    id: 1,
+    name: "Overview",
+    link: "/adminDashboard",
+    icon: MdSpaceDashboard,
+  },
+  {
+    id: 2,
+    name: "Manage Users",
+    link: "/adminDashboard/manageUsers",
+    icon: ImUsers,
+  },
+  {
+    id: 3,
+    name: "Manage Payments",
+    link: "/adminDashboard/managePayments",
+    icon: MdOutlinePayments,
+  },
+  {
+    id: 3,
+    name: "Manage Investments",
+    link: "/adminDashboard/manageInvestments",
+    icon: BsGraphUpArrow,
+  },
+  {
+    id: 4,
+    name: "Manage Plans",
+    link: "/adminDashboard/managePlans",
+    icon: MdTableChart,
+  },
+  {
+    id: 5,
+    name: "Sign Out",
+    link: "/adminsignout",
+    icon: RiLogoutCircleRLine,
+  },
+];
