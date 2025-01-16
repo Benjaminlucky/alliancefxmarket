@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import userRoutes from "./routes/userRoutes.js"; // Ensure correct import
 import getCryptoPrice from "./controllers/cryptoPrices.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 // Load the appropriate .env file based on the environment
 if (process.env.NODE_ENV === "production") {
@@ -52,11 +53,9 @@ app.get("/", (req, res) => {
 
 // Use the user routes
 app.use("/user", userRoutes); // Ensure the user route is mounted correctly
-
+app.use("/admin", adminRoutes); // Admin Routes
 
 app.get("/crypto-price", getCryptoPrice);
-
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;

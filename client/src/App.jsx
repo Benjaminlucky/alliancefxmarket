@@ -30,6 +30,7 @@ import Adminusers from "./pages/admin/dashboard/Adminusers";
 import AdminPayments from "./pages/admin/dashboard/adminPayments";
 import Admininvestments from "./pages/admin/dashboard/Admininvestments";
 import Adminplans from "./pages/admin/dashboard/Adminplans";
+import AdminSignup from "./pages/admin/AdminSignup";
 
 // Import the UserProvider
 
@@ -58,6 +59,7 @@ function App() {
           <Route path="/resetpassword/:token" element={<Resetpassword />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admindashboard" element={<Admindashboard />} />
+          <Route path="/adminsignup" element={<AdminSignup />} />
           <Route path="/adminDashboard/manageUsers" element={<Adminusers />} />
           <Route
             path="/adminDashboard/managePayments"
