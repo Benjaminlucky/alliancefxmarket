@@ -8,10 +8,13 @@ function Admin() {
   return (
     <main className="admin__section w-full">
       <div className="admin__wrapper mt-20 w-4/5 mx-auto">
-        <div className="admin__content flex flex-col items-center  px-32 py-20">
-          <form action="" className="w-2/5 flex flex-col items-center ">
+        <div className="admin__content flex flex-col items-center  md:px-32 py-20">
+          <form
+            action=""
+            className="w-full md:w-2/5 flex flex-col items-center "
+          >
             <div className="admin__title flex  items-center ">
-              <h1 className="text-3xl font-bold py-8 text-2xl text-gray-700 !text-left ">
+              <h1 className="text-lg md:text-3xl font-bold py-8 text-2xl text-gray-700 !text-left ">
                 Please Sign in to your Dashboard
               </h1>
             </div>
