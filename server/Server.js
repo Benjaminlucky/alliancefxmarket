@@ -34,9 +34,19 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Ensure OPTIONS is allowed
+    allowedHeaders: "Authorization,Content-Type",
+    credentials: true,
+  })
+);
+
+// Handle preflight requests manually (optional but helps ensure correctness)
+app.options(
+  "*",
+  cors({
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: "Authorization,Content-Type",
-    credentials: true, // If you're using cookies or authorization headers
   })
 );
 
