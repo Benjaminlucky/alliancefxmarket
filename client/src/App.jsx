@@ -4,7 +4,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useNavigate,
 } from "react-router-dom";
 import Home from "./pages/home/Home";
 import Signup from "./pages/signup/Signup";
@@ -19,7 +18,6 @@ import LayoutWithHeader from "./components/layoutoutwithheader/LayoutWithHeader"
 import Referral from "./pages/dashboard/referral/Referral";
 import Plans from "./pages/dashboard/plans/Plans";
 import Withdrawal from "./pages/dashboard/withdrawal/Withdrawal";
-import { UserProvider } from "./components/profile/UserContext";
 import Forgotpassword from "./pages/forgotpassword/Forgotpassword";
 import Resetpassword from "./pages/resetpassword/Resetpassword";
 import Terms from "./pages/terms/Terms";
@@ -32,71 +30,117 @@ import Admininvestments from "./pages/admin/dashboard/Admininvestments";
 import Adminplans from "./pages/admin/dashboard/Adminplans";
 import AdminSignup from "./pages/admin/AdminSignup";
 
-// Import the UserProvider
+// Admin Layout (No Header)
+const AdminLayout = ({ children }) => {
+  return <div>{children}</div>;
+};
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("isAuthenticated") === "true"
   );
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(
+    !!localStorage.getItem("adminToken")
+  );
 
   useEffect(() => {
-    const authState = localStorage.getItem("isAuthenticated") === "true";
-    setIsAuthenticated(authState);
+    setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
+    setIsAdminAuthenticated(!!localStorage.getItem("adminToken"));
   }, []);
-
   return (
-    // Wrap the entire Router with UserProvider
     <Router>
-      <LayoutWithHeader>
-        <Routes>
-          {/* Main public routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/company" element={<Company />} />
-          <Route path="/terms-condition" element={<Terms />} />
-          <Route path="/privacy-policy" element={<Privacy />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgotpassword" element={<Forgotpassword />} />
-          <Route path="/resetpassword/:token" element={<Resetpassword />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/admindashboard" element={<Admindashboard />} />
-          <Route path="/adminsignup" element={<AdminSignup />} />
-          <Route path="/adminDashboard/manageUsers" element={<Adminusers />} />
-          <Route
-            path="/adminDashboard/managePayments"
-            element={<AdminPayments />}
-          />
-          <Route
-            path="/adminDashboard/manageInvestments"
-            element={<Admininvestments />}
-          />
-          <Route path="/adminDashboard/managePlans" elements={<Adminplans />} />
-          <Route
-            path="/signin"
-            element={<Signin setIsAuthenticated={setIsAuthenticated} />}
-          />
-          {/* Protected Dashboard routes */}
-          <Route
-            path="/dashboard/*"
-            element={
-              isAuthenticated ? (
-                <Dashboardlayout />
-              ) : (
-                <Navigate to="/signin" replace />
-              )
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="payments" element={<Payments />} />
-            <Route path="invest" element={<Invest />} />
-            <Route path="earning" element={<Earning />} />
-            <Route path="referral" element={<Referral />} />
-            <Route path="plans" element={<Plans />} />
-            <Route path="withdrawal" element={<Withdrawal />} />
-          </Route>
-          {/* Catch-all route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </LayoutWithHeader>
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path="/"
+          element={
+            <LayoutWithHeader>
+              <Home />
+            </LayoutWithHeader>
+          }
+        />
+        <Route
+          path="/company"
+          element={
+            <LayoutWithHeader>
+              <Company />
+            </LayoutWithHeader>
+          }
+        />
+        <Route
+          path="/terms-condition"
+          element={
+            <LayoutWithHeader>
+              <Terms />
+            </LayoutWithHeader>
+          }
+        />
+        <Route
+          path="/privacy-policy"
+          element={
+            <LayoutWithHeader>
+              <Privacy />
+            </LayoutWithHeader>
+          }
+        />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/admin"
+          element={<Admin setIsAdminAuthenticated={setIsAdminAuthenticated} />}
+        />
+        <Route path="/forgotpassword" element={<Forgotpassword />} />
+        <Route path="/resetpassword/:token" element={<Resetpassword />} />
+        <Route
+          path="/signin"
+          element={<Signin setIsAuthenticated={setIsAuthenticated} />}
+        />
+
+        {/* Protected Dashboard Routes */}
+        <Route
+          path="/dashboard/*"
+          element={
+            isAuthenticated ? (
+              <Dashboardlayout />
+            ) : (
+              <Navigate to="/signin" replace />
+            )
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="payments" element={<Payments />} />
+          <Route path="invest" element={<Invest />} />
+          <Route path="earning" element={<Earning />} />
+          <Route path="referral" element={<Referral />} />
+          <Route path="plans" element={<Plans />} />
+          <Route path="withdrawal" element={<Withdrawal />} />
+        </Route>
+
+        {/* Admin Dashboard Routes (No Header) */}
+        <Route
+          path="/admindashboard/*"
+          element={
+            isAdminAuthenticated ? (
+              <AdminLayout>
+                <Routes>
+                  <Route index element={<Admindashboard />} />
+                  <Route path="manageUsers" element={<Adminusers />} />
+                  <Route path="managePayments" element={<AdminPayments />} />
+                  <Route
+                    path="manageInvestments"
+                    element={<Admininvestments />}
+                  />
+                  <Route path="managePlans" element={<Adminplans />} />
+                  <Route path="signup" element={<AdminSignup />} />
+                </Routes>
+              </AdminLayout>
+            ) : (
+              <Navigate to="/admin" replace />
+            )
+          }
+        />
+        {/* Catch-All Route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </Router>
   );
 }
