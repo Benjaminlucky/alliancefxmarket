@@ -29,11 +29,7 @@ import AdminPayments from "./pages/admin/dashboard/adminPayments";
 import Admininvestments from "./pages/admin/dashboard/Admininvestments";
 import Adminplans from "./pages/admin/dashboard/Adminplans";
 import AdminSignup from "./pages/admin/AdminSignup";
-
-// Admin Layout (No Header)
-const AdminLayout = ({ children }) => {
-  return <div>{children}</div>;
-};
+import AdminLayout from "./pages/admin/dashboard/Adminlayout";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -47,6 +43,7 @@ function App() {
     setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
     setIsAdminAuthenticated(!!localStorage.getItem("adminToken"));
   }, []);
+
   return (
     <Router>
       <Routes>
@@ -115,30 +112,26 @@ function App() {
           <Route path="withdrawal" element={<Withdrawal />} />
         </Route>
 
-        {/* Admin Dashboard Routes (No Header) */}
+        {/* Admin Dashboard Routes */}
         <Route
           path="/admindashboard/*"
           element={
             isAdminAuthenticated ? (
-              <AdminLayout>
-                <Routes>
-                  <Route index element={<Admindashboard />} />
-                  <Route path="manageUsers" element={<Adminusers />} />
-                  <Route path="managePayments" element={<AdminPayments />} />
-                  <Route
-                    path="manageInvestments"
-                    element={<Admininvestments />}
-                  />
-                  <Route path="managePlans" element={<Adminplans />} />
-                  <Route path="signup" element={<AdminSignup />} />
-                </Routes>
-              </AdminLayout>
+              <AdminLayout />
             ) : (
               <Navigate to="/admin" replace />
             )
           }
-        />
-        {/* Catch-All Route */}
+        >
+          <Route index element={<Admindashboard />} />
+          <Route path="manageUsers" element={<Adminusers />} />
+          <Route path="managePayments" element={<AdminPayments />} />
+          <Route path="manageInvestments" element={<Admininvestments />} />
+          <Route path="managePlans" element={<Adminplans />} />
+          <Route path="signup" element={<AdminSignup />} />
+        </Route>
+
+        {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
