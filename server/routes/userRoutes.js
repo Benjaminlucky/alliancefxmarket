@@ -10,8 +10,9 @@ import {
 } from "../controllers/userController.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
 import { getUserProfileImage } from "../controllers/getProfileimg.js";
-import { forgotPassword } from '../controllers/forgotPassword.js';
+import { forgotPassword } from "../controllers/forgotPassword.js";
 import { resetPassword } from "../controllers/resetpassword.js";
+import { deleteUser } from "../controllers/deleteUserController.js";
 
 const router = express.Router();
 
@@ -35,7 +36,10 @@ router.post(
 router.get("/profile", authenticateToken, getUserProfileImage);
 
 // Forgot Password Route
-router.post('/forgot-password', forgotPassword);
-router.post('/resetpassword', resetPassword);
+router.post("/forgot-password", forgotPassword);
+router.post("/resetpassword", resetPassword);
+
+//Delet User
+router.delete("/deleteuser/:id", deleteUser);
 
 export default router;
