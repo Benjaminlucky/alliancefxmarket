@@ -13,6 +13,7 @@ import { getUserProfileImage } from "../controllers/getProfileimg.js";
 import { forgotPassword } from "../controllers/forgotPassword.js";
 import { resetPassword } from "../controllers/resetpassword.js";
 import { deleteUser } from "../controllers/deleteUserController.js";
+import updateUser from "../controllers/editUserController.js";
 
 const router = express.Router();
 
@@ -41,5 +42,6 @@ router.post("/resetpassword", resetPassword);
 
 //Delet User
 router.delete("/deleteuser/:id", deleteUser);
+router.put("/updateuser/:id", updateUser);
 
 export default router;
