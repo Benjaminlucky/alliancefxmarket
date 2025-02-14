@@ -46,3 +46,24 @@ export const getPlans = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// Add Feature to a Specific Investment Plan
+export const addFeatureToInvestment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { feature } = req.body;
+
+    const investment = await investmentPlan.findById(id);
+    if (!investment) {
+      return res.status(404).json({ error: "Investment not found" });
+    }
+
+    investment.features.push(feature);
+    await investment.save();
+
+    res.status(200).json({ message: "Feature added successfully", investment });
+  } catch (error) {
+    console.error("Error adding feature:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

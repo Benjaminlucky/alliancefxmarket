@@ -20,6 +20,8 @@ function Admininvestments() {
   };
 
   const handleFeatureModal = () => {
+    setSelectedInvestment(null); //Reset Selection
+    setFeature("");
     setOpenFeatureModal(true);
   };
 
@@ -121,13 +123,8 @@ function Admininvestments() {
     }
 
     try {
-      const API_BASE_URL =
-        window.location.origin === "http://localhost:5173"
-          ? "http://localhost:3000"
-          : "https://alliancefxmarket.onrender.com";
-
       const response = await fetch(
-        `${API_BASE_URL}/admin/investments/${selectedInvestment.id}/features`,
+        `${API_BASE_URL}/admin/investments/${selectedInvestment._id}/features`,
         {
           method: "POST",
           headers: {
@@ -138,7 +135,18 @@ function Admininvestments() {
       );
 
       if (response.ok) {
+        const data = await response.json();
         showNotification("Feature added successfully!", "success");
+
+        // Update the state with the new feature added
+        setInvestments((prevInvestments) =>
+          prevInvestments.map((inv) =>
+            inv._id === selectedInvestment._id
+              ? { ...inv, features: [...inv.features, feature] }
+              : inv
+          )
+        );
+
         handleCloseFeatureModal();
       } else {
         showNotification("Failed to add feature.", "error");
@@ -185,48 +193,55 @@ function Admininvestments() {
             <div className="manageTitle text-xl md:text-2xl font-bold text-gray-600 mb-8 text-center md:text-left">
               Manage Investments
             </div>
+            {/* Investment Plans Table */}
             <div className="plansTable__content">
               <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                      <th scope="col" className="px-6 py-3">
-                        Investment Plans
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Minimum Deposit
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Minimum Returns
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        Minimum Duration
-                      </th>
-                      <th scope="col" className="px-6 py-3 text-center">
-                        Actions
-                      </th>
+                      <th className="px-6 py-3">Investment Plans</th>
+                      <th className="px-6 py-3">Minimum Deposit</th>
+                      <th className="px-6 py-3">Minimum Returns</th>
+                      <th className="px-6 py-3">Minimum Duration</th>
+                      <th className="px-6 py-3">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        Starter Plan
-                      </th>
-                      <td className="px-6 py-4">$500</td>
-                      <td className="px-6 py-4">$50</td>
-                      <td className="px-6 py-4">6 months</td>
-                      <td className="px-6 py-4 text-center flex justify-center gap-2">
-                        <button className="text-blue-600 hover:underline font-medium">
-                          Edit
-                        </button>
-                        <button className="text-red-600 hover:underline font-medium">
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
+                    {investments.length > 0 ? (
+                      investments.map((investment) => (
+                        <tr
+                          key={investment._id}
+                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                        >
+                          <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                            {investment.planName}
+                          </td>
+                          <td className="px-6 py-4">
+                            ${investment.minimumDeposit}
+                          </td>
+                          <td className="px-6 py-4">
+                            ${investment.minimumReturns}
+                          </td>
+                          <td className="px-6 py-4">
+                            {investment.minimumDuration} months
+                          </td>
+                          <td className="flex gap-3 items-center">
+                            <button className="bg-secondary-light px-5 py-2 rounded-sm font-bold hover:bg-secondary hover:text-white duration-200">
+                              Edit
+                            </button>
+                            <button className="bg-red-100 px-5 py-2 rounded-sm font-bold text-red-500 hover:bg-red-200">
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4" className="text-center py-4">
+                          No investments found.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -326,22 +341,21 @@ function Admininvestments() {
                   </label>
                   <select
                     id="investment"
-                    value={selectedInvestment?.id || ""}
-                    onChange={(e) =>
-                      setSelectedInvestment(
-                        investments.find(
-                          (investment) =>
-                            investment.id === parseInt(e.target.value)
-                        )
-                      )
-                    }
+                    value={selectedInvestment?._id || ""}
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      const investment = investments.find(
+                        (inv) => inv._id === selectedId
+                      );
+                      setSelectedInvestment(investment || null);
+                    }}
                     className="w-full bg-gray-100 px-4 py-2 rounded-md"
                   >
                     <option value="" disabled>
                       Select an investment
                     </option>
                     {investments.map((investment) => (
-                      <option key={investment.id} value={investment.id}>
+                      <option key={investment._id} value={investment._id}>
                         {investment.planName}
                       </option>
                     ))}
