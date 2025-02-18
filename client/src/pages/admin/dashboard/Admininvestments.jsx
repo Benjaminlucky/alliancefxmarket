@@ -158,49 +158,49 @@ function Admininvestments() {
     }
   };
 
-  // const handleAddFeature = async () => {
-  //   if (!selectedInvestment || !feature) {
-  //     showNotification(
-  //       "Please select an investment and enter a feature.",
-  //       "error"
-  //     );
-  //     return;
-  //   }
+  const handleAddFeature2 = async () => {
+    if (!selectedInvestment || !feature) {
+      showNotification(
+        "Please select an investment and enter a feature.",
+        "error"
+      );
+      return;
+    }
 
-  //   try {
-  //     const response = await fetch(
-  //       `${API_BASE_URL}/admin/investments/${selectedInvestment._id}/features`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ feature }),
-  //       }
-  //     );
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/admin/investments/${selectedInvestment._id}/features`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ feature }),
+        }
+      );
 
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       showNotification("Feature added successfully!", "success");
+      if (response.ok) {
+        const data = await response.json();
+        showNotification("Feature added successfully!", "success");
 
-  //       // Update the state with the new feature added
-  //       setInvestments((prevInvestments) =>
-  //         prevInvestments.map((inv) =>
-  //           inv._id === selectedInvestment._id
-  //             ? { ...inv, features: [...inv.features, feature] }
-  //             : inv
-  //         )
-  //       );
+        // Update the state with the new feature added
+        setInvestments((prevInvestments) =>
+          prevInvestments.map((inv) =>
+            inv._id === selectedInvestment._id
+              ? { ...inv, features: [...inv.features, feature] }
+              : inv
+          )
+        );
 
-  //       handleCloseFeatureModal();
-  //     } else {
-  //       showNotification("Failed to add feature.", "error");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding feature:", error);
-  //     showNotification("An error occurred. Please try again.", "error");
-  //   }
-  // };
+        handleCloseFeatureModal();
+      } else {
+        showNotification("Failed to add feature.", "error");
+      }
+    } catch (error) {
+      console.error("Error adding feature:", error);
+      showNotification("An error occurred. Please try again.", "error");
+    }
+  };
 
   // Handle delete investment
   const handleDeleteInvestment = async () => {
@@ -496,7 +496,7 @@ function Admininvestments() {
                   </button>
                   <button
                     type="button"
-                    onClick={handleAddFeature}
+                    onClick={handleAddFeature2}
                     className="bg-secondary-light w-[50%] text-gray-700 px-5 py-3 rounded-sm font-bold hover:bg-secondary-dark hover:text-white duration-200"
                   >
                     Add Feature
