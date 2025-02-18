@@ -14,6 +14,20 @@ function Admininvestments() {
   const [investments, setInvestments] = useState([]);
   const [notification, setNotification] = useState({ message: "", type: "" });
   const [feature, setFeature] = useState("");
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [investmentToDelete, setInvestmentToDelete] = useState(null);
+
+  // Open delete confirmation modal
+  const handleOpenDeleteModal = (investment) => {
+    setInvestmentToDelete(investment);
+    setOpenDeleteModal(true);
+  };
+
+  // Close delete modal
+  const handleCloseDeleteModal = () => {
+    setInvestmentToDelete(null);
+    setOpenDeleteModal(false);
+  };
 
   const handleModal = () => {
     setOpenModal(true);
@@ -157,6 +171,31 @@ function Admininvestments() {
     }
   };
 
+  // Handle delete investment
+  const handleDeleteInvestment = async () => {
+    if (!investmentToDelete) return;
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/admin/investments/${investmentToDelete._id}`,
+        { method: "DELETE" }
+      );
+
+      if (response.ok) {
+        showNotification("Investment deleted successfully!", "success");
+        setInvestments(
+          investments.filter((inv) => inv._id !== investmentToDelete._id)
+        );
+        handleCloseDeleteModal();
+      } else {
+        showNotification("Failed to delete investment.", "error");
+      }
+    } catch (error) {
+      console.error("Error deleting investment:", error);
+      showNotification("An error occurred. Please try again.", "error");
+    }
+  };
+
   return (
     <div className="investment__section w-full">
       <div className="investment__wrapper w-11/12 mx-auto">
@@ -229,7 +268,10 @@ function Admininvestments() {
                             <button className="bg-secondary-light px-5 py-2 rounded-sm font-bold hover:bg-secondary hover:text-white duration-200">
                               Edit
                             </button>
-                            <button className="bg-red-100 px-5 py-2 rounded-sm font-bold text-red-500 hover:bg-red-200">
+                            <button
+                              className="bg-red-100 px-5 py-2 rounded-sm font-bold text-red-500 hover:bg-red-200"
+                              onClick={() => handleOpenDeleteModal(investment)}
+                            >
                               Delete
                             </button>
                           </td>
@@ -390,6 +432,38 @@ function Admininvestments() {
                     Add Feature
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {openDeleteModal && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+            <div className="bg-white py-8 px-6 w-full max-w-md rounded-md shadow-md">
+              <h3 className="text-lg font-bold text-center">
+                Confirm Deletion
+              </h3>
+              <p className="text-center my-4">
+                Are you sure you want to delete the investment plan{" "}
+                <span className="font-bold text-red-500">
+                  {investmentToDelete?.planName}
+                </span>
+                ?
+              </p>
+              <div className="flex justify-between gap-4">
+                <button
+                  onClick={handleCloseDeleteModal}
+                  className="bg-gray-200 w-[50%] text-gray-700 px-4 py-2 rounded-sm font-bold hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteInvestment}
+                  className="bg-red-500 w-[50%] text-white px-4 py-2 rounded-sm font-bold hover:bg-red-700"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>

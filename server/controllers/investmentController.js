@@ -67,3 +67,26 @@ export const addFeatureToInvestment = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+// Delete an Investment Plan
+export const deleteInvestmentPlan = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find and delete the investment plan by ID
+    const deletedPlan = await investmentPlan.findByIdAndDelete(id);
+
+    if (!deletedPlan) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Investment plan not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Investment plan deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting investment:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
