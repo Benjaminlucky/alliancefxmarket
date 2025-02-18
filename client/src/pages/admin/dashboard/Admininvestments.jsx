@@ -16,6 +16,8 @@ function Admininvestments() {
   const [feature, setFeature] = useState("");
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [investmentToDelete, setInvestmentToDelete] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [newFeature, setNewFeature] = useState("");
 
   // Open delete confirmation modal
   const handleOpenDeleteModal = (investment) => {
@@ -47,6 +49,35 @@ function Admininvestments() {
       minimumReturns: "",
       minimumDuration: "",
     });
+  };
+
+  const handleAddFeature = () => {
+    if (newFeature.trim() !== "") {
+      setFormData((prevData) => ({
+        ...prevData,
+        features: [...prevData.features, newFeature.trim()],
+      }));
+      setNewFeature(""); // Clear input after adding
+    }
+  };
+
+  const handleRemoveFeature = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      features: prevData.features.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleEditInvestment = (investment) => {
+    setSelectedInvestment(investment);
+    setFormData({
+      planName: investment.planName || "",
+      minimumDeposit: investment.minimumDeposit || 0,
+      minimumReturns: investment.minimumReturns || 0,
+      minimumDuration: investment.minimumDuration || 0,
+      features: investment.features || [], // Ensure features is handled as an array
+    });
+    setOpenEditModal(true);
   };
 
   const API_BASE_URL =
@@ -127,49 +158,49 @@ function Admininvestments() {
     }
   };
 
-  const handleAddFeature = async () => {
-    if (!selectedInvestment || !feature) {
-      showNotification(
-        "Please select an investment and enter a feature.",
-        "error"
-      );
-      return;
-    }
+  // const handleAddFeature = async () => {
+  //   if (!selectedInvestment || !feature) {
+  //     showNotification(
+  //       "Please select an investment and enter a feature.",
+  //       "error"
+  //     );
+  //     return;
+  //   }
 
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/admin/investments/${selectedInvestment._id}/features`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ feature }),
-        }
-      );
+  //   try {
+  //     const response = await fetch(
+  //       `${API_BASE_URL}/admin/investments/${selectedInvestment._id}/features`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ feature }),
+  //       }
+  //     );
 
-      if (response.ok) {
-        const data = await response.json();
-        showNotification("Feature added successfully!", "success");
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       showNotification("Feature added successfully!", "success");
 
-        // Update the state with the new feature added
-        setInvestments((prevInvestments) =>
-          prevInvestments.map((inv) =>
-            inv._id === selectedInvestment._id
-              ? { ...inv, features: [...inv.features, feature] }
-              : inv
-          )
-        );
+  //       // Update the state with the new feature added
+  //       setInvestments((prevInvestments) =>
+  //         prevInvestments.map((inv) =>
+  //           inv._id === selectedInvestment._id
+  //             ? { ...inv, features: [...inv.features, feature] }
+  //             : inv
+  //         )
+  //       );
 
-        handleCloseFeatureModal();
-      } else {
-        showNotification("Failed to add feature.", "error");
-      }
-    } catch (error) {
-      console.error("Error adding feature:", error);
-      showNotification("An error occurred. Please try again.", "error");
-    }
-  };
+  //       handleCloseFeatureModal();
+  //     } else {
+  //       showNotification("Failed to add feature.", "error");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding feature:", error);
+  //     showNotification("An error occurred. Please try again.", "error");
+  //   }
+  // };
 
   // Handle delete investment
   const handleDeleteInvestment = async () => {
@@ -192,6 +223,42 @@ function Admininvestments() {
       }
     } catch (error) {
       console.error("Error deleting investment:", error);
+      showNotification("An error occurred. Please try again.", "error");
+    }
+  };
+
+  const handleUpdateInvestment = async (e) => {
+    e.preventDefault();
+
+    if (!selectedInvestment) return;
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/admin/investments/${selectedInvestment._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        showNotification("Investment updated successfully!", "success");
+
+        setInvestments((prevInvestments) =>
+          prevInvestments.map((inv) =>
+            inv._id === selectedInvestment._id ? { ...inv, ...formData } : inv
+          )
+        );
+
+        setOpenEditModal(false);
+      } else {
+        showNotification("Failed to update investment.", "error");
+      }
+    } catch (error) {
+      console.error("Error updating investment:", error);
       showNotification("An error occurred. Please try again.", "error");
     }
   };
@@ -265,7 +332,10 @@ function Admininvestments() {
                             {investment.minimumDuration} months
                           </td>
                           <td className="flex gap-3 items-center">
-                            <button className="bg-secondary-light px-5 py-2 rounded-sm font-bold hover:bg-secondary hover:text-white duration-200">
+                            <button
+                              className="bg-secondary-light px-5 py-2 rounded-sm font-bold hover:bg-secondary hover:text-white duration-200"
+                              onClick={() => handleEditInvestment(investment)}
+                            >
                               Edit
                             </button>
                             <button
@@ -465,6 +535,125 @@ function Admininvestments() {
                   Delete
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {openEditModal && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+            <div className="modal__content mx-auto bg-white py-12 px-8 w-full max-w-lg rounded-md shadow-md">
+              <div className="modal__title bg-secondary-light py-3 px-5 uppercase text-lg font-bold text-gray-700 text-center">
+                <h3>Edit Investment Plan</h3>
+              </div>
+              <form onSubmit={handleUpdateInvestment}>
+                <div className="form__content py-8">
+                  <div className="plan__name flex flex-col gap-2 mb-6">
+                    <label htmlFor="planName">Plan</label>
+                    <input
+                      type="text"
+                      name="planName"
+                      value={formData.planName}
+                      onChange={handleInputChange}
+                      className="bg-gray-100 focus:ring-0 rounded-md text-gray-600 font-bold py-3"
+                      required
+                    />
+                  </div>
+                  <div className="plan__deposit flex flex-col gap-2 mb-6">
+                    <label htmlFor="minimumDeposit">Minimum Deposit ($)</label>
+                    <input
+                      type="number"
+                      name="minimumDeposit"
+                      value={formData.minimumDeposit}
+                      onChange={handleInputChange}
+                      className="bg-gray-100 focus:ring-0 rounded-md text-gray-600 font-bold py-3"
+                      required
+                    />
+                  </div>
+                  <div className="minimum__returns flex flex-col gap-2 mb-6">
+                    <label htmlFor="minimumReturns">Minimum Returns (%)</label>
+                    <input
+                      type="number"
+                      name="minimumReturns"
+                      value={formData.minimumReturns}
+                      onChange={handleInputChange}
+                      className="bg-gray-100 focus:ring-0 rounded-md text-gray-600 font-bold py-3"
+                      required
+                    />
+                  </div>
+                  <div className="minimum__duration flex flex-col gap-2 mb-6">
+                    <label htmlFor="minimumDuration">
+                      Minimum Duration (Months)
+                    </label>
+                    <input
+                      type="number"
+                      name="minimumDuration"
+                      value={formData.minimumDuration}
+                      onChange={handleInputChange}
+                      className="bg-gray-100 focus:ring-0 rounded-md text-gray-600 font-bold py-3"
+                      required
+                    />
+                  </div>
+
+                  <div className="features flex flex-col gap-2 mb-6">
+                    <label htmlFor="features">Features</label>
+                    <div className="flex gap-2 flex-wrap">
+                      {formData.features.map((feature, index) => (
+                        <div
+                          key={index}
+                          className="bg-gray-200 px-3 py-1 rounded flex items-center"
+                        >
+                          <span>{feature}</span>
+                          <button
+                            type="button"
+                            className="ml-2 text-red-500"
+                            onClick={() => handleRemoveFeature(index)}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <input
+                      type="text"
+                      value={newFeature}
+                      onChange={(e) => setNewFeature(e.target.value)}
+                      className="bg-gray-100 focus:ring-0 rounded-md text-gray-600 font-bold py-3 mt-2"
+                      placeholder="Enter feature..."
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddFeature}
+                      className="bg-secondary-light text-gray-900 font-bold px-4 py-2 rounded-md mt-2"
+                    >
+                      Add Feature
+                    </button>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="investmentBtns flex justify-between gap-4">
+                    <button
+                      type="button"
+                      onClick={() => setOpenEditModal(false)}
+                      className="bg-red-100 w-1/3 text-red-600 px-5 py-3 rounded-sm font-bold hover:bg-red-300"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="bg-secondary-light w-1/3 text-gray-700 px-5 py-3 rounded-sm font-bold hover:bg-secondary-dark hover:text-white duration-200"
+                    >
+                      Update
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDeleteInvestment}
+                      className="bg-red-600 w-1/3 text-white px-5 py-3 rounded-sm font-bold hover:bg-red-800"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         )}

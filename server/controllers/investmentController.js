@@ -90,3 +90,41 @@ export const deleteInvestmentPlan = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// Update an Investment Plan
+export const updateInvestmentPlan = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      planName,
+      minimumDeposit,
+      minimumDuration,
+      minimumReturns,
+      features,
+    } = req.body;
+
+    // Find the investment plan by ID and update it
+    const updatedPlan = await investmentPlan.findByIdAndUpdate(
+      id,
+      { planName, minimumDeposit, minimumDuration, minimumReturns, features },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedPlan) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Investment plan not found" });
+    }
+
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Investment plan updated successfully",
+        updatedPlan,
+      });
+  } catch (error) {
+    console.error("Error updating investment:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
