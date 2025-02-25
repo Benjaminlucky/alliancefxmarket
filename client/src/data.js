@@ -741,7 +741,7 @@ export const adminDashboardLinks = [
   },
   {
     id: 3,
-    name: "Manage Payments",
+    name: "Deposit",
     link: "/adminDashboard/managePayments",
     icon: MdOutlinePayments,
   },

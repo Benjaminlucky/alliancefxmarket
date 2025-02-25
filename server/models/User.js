@@ -8,6 +8,17 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, required: true },
     country: { type: String, required: false },
     password: { type: String, required: true },
+    planId: { type: mongoose.Schema.Types.ObjectId, ref: "investmentPlan" },
+    amountInvested: { type: Number, default: 0 },
+    durationMonths: { type: Number, default: 0 },
+    expectedReturns: { type: Number, default: 0 },
+    totalPayout: { type: Number },
+    maturityDate: { type: Date },
+    status: {
+      type: String,
+      enum: ["Active", "Completed", "Cancelled"],
+      default: "Active",
+    },
     isVerified: { type: Boolean, default: false },
     verificationToken: { type: String }, // Store the token for email verification
     profileImage: {
