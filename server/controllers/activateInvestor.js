@@ -46,7 +46,7 @@ export const activateInvestor = async (req, res) => {
     ); // Calculate the maturity date
 
     // Update the investor details
-    investor.planId = planId._id; // Set the planId
+    investor.planId = planId; // Set the planId
     investor.amountInvested = plan.minimumDeposit; // Set the amount invested
     investor.durationMonths = plan.minimumDuration; // Set the duration in months
     investor.expectedReturns = plan.minimumReturns; // Set the expected returns

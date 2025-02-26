@@ -15,7 +15,7 @@ function AdminPayments() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const fetchInvestors = async () => {
+    const fetchData = async () => {
       const API_BASE_URL =
         window.location.origin === "http://localhost:5173"
           ? "http://localhost:3000"
@@ -24,35 +24,30 @@ function AdminPayments() {
       try {
         setLoading(true);
 
-        const response = await fetch(
-          `${API_BASE_URL}/user/fetchUsers?page=${currentPage}&limit=${usersPerPage}`,
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const [investorsRes, plansRes] = await Promise.all([
+          fetch(
+            `${API_BASE_URL}/user/fetchUsers?page=${currentPage}&limit=${usersPerPage}`
+          ),
+          fetch(`${API_BASE_URL}/admin/investments/`),
+        ]);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!investorsRes.ok || !plansRes.ok)
+          throw new Error("Failed to fetch data");
 
-        const data = await response.json();
+        const investorsData = await investorsRes.json();
+        const plansData = await plansRes.json();
 
-        if (data && Array.isArray(data.users)) {
-          setInvestors(data.users);
-          setTotalPages(data.totalPages || 1);
-        } else {
-          setInvestors([]);
-        }
+        setInvestors(investorsData.users || []);
+        setInvestmentPlans(plansData.plans || []);
+        setTotalPages(investorsData.totalPages || 1);
       } catch (error) {
-        console.error("Error fetching investors:", error);
-        setInvestors([]);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchInvestors();
+    fetchData();
   }, [currentPage]);
 
   const fetchInvestmentPlans = async () => {
@@ -142,11 +137,17 @@ function AdminPayments() {
                         <td className="px-6 py-4 font-medium text-gray-900">
                           {investor.fullName || "N/A"}
                         </td>
-                        <td className="px-6 py-4">{investor.plan || "N/A"}</td>
                         <td className="px-6 py-4">
-                          ${investor.amount || "0.00"}
+                          {investmentPlans.find(
+                            (plan) => plan._id === investor.planId
+                          )?.planName || "N/A"}
                         </td>
-                        <td className="px-6 py-4">{investor.roi || 0}%</td>
+                        <td className="px-6 py-4">
+                          ${investor.amountInvested || "0.00"}
+                        </td>
+                        <td className="px-6 py-4">
+                          ${investor.expectedReturns || 0}
+                        </td>
                         <td className="px-6 py-4 text-center">
                           <button
                             onClick={() => handleInvestorModal(investor)}
