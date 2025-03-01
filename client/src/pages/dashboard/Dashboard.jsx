@@ -1,48 +1,55 @@
-import React, { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
-import { plans } from "../../data"; // Assuming you have this data
-import Dashboardnav from "../../components/dashboardnav/Dashboardnav";
+import React, { useEffect, useState } from "react";
 import Profile from "../../components/profile/profile";
 
 function Dashboard() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [plans, setPlans] = useState([]);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      const API_BASE_URL =
+        window.location.origin === "http://localhost:5173"
+          ? "http://localhost:3000"
+          : "https://alliancefxmarket.onrender.com";
+
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_BASE_URL}/admin/investments/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Fetched plans:", data);
+
+        if (data && Array.isArray(data.plans)) {
+          setPlans(data.plans);
+        } else {
+          setPlans([]);
+        }
+      } catch (error) {
+        console.error("Error fetching investment plans:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlans();
+  }, []);
+
   return (
-    <main className="section  px-3 md:px-0 md:w-4/5 lg:w-4/5 mx-auto  text-white">
-      <div className="mainWrapper w-full py-14 px-2 md:px-20 ">
+    <main className="section px-3 md:px-0 md:w-4/5 lg:w-4/5 mx-auto text-white">
+      <div className="mainWrapper w-full py-14 px-2 md:px-20">
         <div className="profile">
           <Profile />
         </div>
-        <div className="activity pt-10 md:py-10">
-          <div className="activityWrapper ">
-            <div className="activityContent gap-3 md:gap-10 grid grid-rows-1 md:grid-cols-3 place-content-center items-center">
-              <div className="total columns-lg border border-1 border-gray-500 rounded-xl">
-                <div className="totalContent p-5">
-                  <h5 className="text-secondary-light">Total Investment</h5>
-                  <h3 className="text-3xl font-bold py-2">$15,867.00</h3>
-                  <p className="text-secondary-light">Starter Plan</p>
-                  <small className="text-gray-400">
-                    Invested August 15 2022
-                  </small>
-                </div>
-              </div>
-              <div className="roi column-lg border border-1 border-gray-500 rounded-xl">
-                <div className="roiContent p-5">
-                  <h5 className="text-secondary-light">Total ROI</h5>
-                  <h3 className="text-3xl font-bold py-2">$1,522.00</h3>
-                  <p className="text-secondary-light">6.5% Monthly</p>
-                </div>
-              </div>
-              <div className="balance border border-1 border-gray-500 rounded-xl">
-                <div className="balanceContent p-5">
-                  <h5 className="text-secondary-light">Balance Pending</h5>
-                  <h3 className="text-3xl font-bold py-2">$18,000.00</h3>
-                  <p className="text-secondary-light">
-                    Due Date: August 16 2024
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
         <div className="investmentSection">
           <div className="investmentWrapper mt-3">
             <div className="investmentContent">
@@ -51,23 +58,25 @@ function Dashboard() {
                   Choose an Investment Plan
                 </h2>
               </div>
-              <div className="investmentplans">
+              {isLoading ? (
+                <p className="text-center">Loading investment plans...</p>
+              ) : (
                 <div className="investmentPlansWrapper gap-5 grid grid-col-1 md:grid-cols-3">
                   {plans.map((plan, id) => (
-                    <div className="plan  bg-accent rounded-sm" key={id}>
+                    <div className="plan bg-accent rounded-sm" key={id}>
                       <div className="planContent px-5 py-8">
                         <h3 className="text-2xl font-bold text-secondary-light">
-                          {plan.plan}
+                          {plan.planName}
                         </h3>
                         <h5 className="font-bold text-3xl py-1">
-                          {plan.amount}
+                          ${plan.minimumDeposit}
                         </h5>
-                        {plan.list.map((subitem, subindex) => (
+                        {plan.features.map((feature, index) => (
                           <li
-                            key={subindex}
+                            key={index}
                             className="list-none mb-1 text-gray-400"
                           >
-                            {subitem}
+                            {feature}
                           </li>
                         ))}
                         <button className="rounded-full border text-lg font-semibold border-secondary-light mt-5 py-3 px-10 hover:border-transparent hover:bg-secondary-light hover:text-accent">
@@ -77,7 +86,7 @@ function Dashboard() {
                     </div>
                   ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

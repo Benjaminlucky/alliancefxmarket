@@ -297,7 +297,7 @@ export const dashnavigation = [
     icon: MdDashboard,
   },
   {
-    label: "Make Payment",
+    label: "Make Deposit",
     link: "/payments",
     icon: RiSecurePaymentFill,
   },
@@ -741,7 +741,7 @@ export const adminDashboardLinks = [
   },
   {
     id: 3,
-    name: "Deposit",
+    name: "Manage Payments",
     link: "/adminDashboard/managePayments",
     icon: MdOutlinePayments,
   },
