@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion"; // ✅ Import animation library
 import Profile from "../../components/profile/profile";
 
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const [plans, setPlans] = useState([]);
+  const [successMessage, setSuccessMessage] = useState(""); // ✅ State for success message
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -78,11 +80,14 @@ function Dashboard() {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Investment successful! Invoice sent.");
+        setSuccessMessage(
+          "🎉 Investment successful! Your invoice has been sent."
+        ); // ✅ Set success message
+        setTimeout(() => setSuccessMessage(""), 5000); // ✅ Hide after 5 seconds
 
         if (data.invoiceUrl) {
-          console.log("Opening invoice:", data.invoiceUrl); // Debugging
-          window.open(data.invoiceUrl, "_blank"); // ✅ Ensure valid URL format
+          console.log("Opening invoice:", data.invoiceUrl);
+          window.open(data.invoiceUrl, "_blank"); // ✅ Open invoice preview
         }
       } else {
         alert("Error: " + (data.message || "Investment failed"));
@@ -99,6 +104,21 @@ function Dashboard() {
         <div className="profile">
           <Profile />
         </div>
+
+        {/* ✅ Animated Success Message */}
+        <AnimatePresence>
+          {successMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-md shadow-lg z-50"
+            >
+              {successMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="investmentSection">
           <div className="investmentWrapper mt-3">

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion"; // ✅ Import Framer Motion
 import Profile from "../../../components/profile/Profile";
 
 function Plans() {
   const [plans, setPlans] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(""); // ✅ Success message state
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -79,11 +81,14 @@ function Plans() {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Investment successful! Invoice sent.");
+        setSuccessMessage(
+          "🎉 Investment successful! Your invoice has been sent."
+        ); // ✅ Show success message
+        setTimeout(() => setSuccessMessage(""), 5000); // ✅ Hide after 5 seconds
 
         if (data.invoiceUrl) {
-          console.log("Opening invoice:", data.invoiceUrl); // Debugging
-          window.open(data.invoiceUrl, "_blank"); // ✅ Ensure valid URL format
+          console.log("Opening invoice:", data.invoiceUrl);
+          window.open(data.invoiceUrl, "_blank"); // ✅ Open invoice preview
         }
       } else {
         alert("Error: " + (data.message || "Investment failed"));
@@ -105,6 +110,22 @@ function Plans() {
               </div>
             </div>
           </div>
+
+          {/* ✅ Animated Success Message */}
+          <AnimatePresence>
+            {successMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-md shadow-lg z-50"
+              >
+                {successMessage}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <div className="planSection">
             <div className="planWrapper py-16">
               <h2 className="text-white text-4xl font-bold pb-14">
