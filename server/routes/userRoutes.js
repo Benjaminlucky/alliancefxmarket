@@ -14,6 +14,7 @@ import { forgotPassword } from "../controllers/forgotPassword.js";
 import { resetPassword } from "../controllers/resetpassword.js";
 import { deleteUser } from "../controllers/deleteUserController.js";
 import updateUser from "../controllers/editUserController.js";
+import { handleInvestment } from "../controllers/investmentInvoicegen.js";
 
 const router = express.Router();
 
@@ -25,6 +26,7 @@ router.post("/resend-verification", authenticateToken, resendVerificationEmail);
 router.get("/verify/:token", verifyUser);
 router.get("/verify-email", verifyUser);
 router.get("/status", authenticateToken, getUserStatus);
+router.post("/investmentinvoice", authenticateToken, handleInvestment);
 
 // Avatar upload route
 router.post(

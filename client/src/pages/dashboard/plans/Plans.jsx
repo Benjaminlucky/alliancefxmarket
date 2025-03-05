@@ -44,6 +44,56 @@ function Plans() {
     fetchPlans();
   }, []);
 
+  const handleInvestment = async (plan) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        alert("You must be logged in to invest.");
+        return;
+      }
+
+      const API_BASE_URL =
+        window.location.origin === "http://localhost:5173"
+          ? "http://localhost:3000"
+          : "https://alliancefxmarket.onrender.com";
+
+      const response = await fetch(`${API_BASE_URL}/user/investmentinvoice/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          planName: plan.planName,
+          amount: plan.minimumDeposit,
+          roi: plan.minimumReturns,
+          maturityDate: new Date(
+            new Date().setMonth(new Date().getMonth() + plan.minimumDuration)
+          ).toISOString(),
+          expectedPayout:
+            plan.minimumDeposit +
+            (plan.minimumDeposit * plan.minimumReturns) / 100,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Investment successful! Invoice sent.");
+
+        if (data.invoiceUrl) {
+          console.log("Opening invoice:", data.invoiceUrl); // Debugging
+          window.open(data.invoiceUrl, "_blank"); // ✅ Ensure valid URL format
+        }
+      } else {
+        alert("Error: " + (data.message || "Investment failed"));
+      }
+    } catch (error) {
+      console.error("Investment error:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <main className="main">
       <div className="mainWrapper mx-auto w-4/5 py-10">
@@ -80,7 +130,10 @@ function Plans() {
                           </li>
                         ))}
                         <div className="button py-5">
-                          <button className="border border-1 border-secondary-light hover:border-transparent hover:bg-secondary-light hover:text-accent py-2 px-5 rounded-full font-semibold">
+                          <button
+                            onClick={() => handleInvestment(plan)}
+                            className="border border-1 border-secondary-light hover:border-transparent hover:bg-secondary-light hover:text-accent py-2 px-5 rounded-full font-semibold"
+                          >
                             Invest Now
                           </button>
                         </div>
