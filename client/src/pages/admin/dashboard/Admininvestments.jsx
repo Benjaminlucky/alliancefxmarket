@@ -326,7 +326,7 @@ function Admininvestments() {
                             ${investment.minimumDeposit}
                           </td>
                           <td className="px-6 py-4">
-                            ${investment.minimumReturns}
+                            {investment.minimumReturns} %
                           </td>
                           <td className="px-6 py-4">
                             {investment.minimumDuration} months

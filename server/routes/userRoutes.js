@@ -7,9 +7,10 @@ import {
   resendVerificationEmail,
   verifyUser,
   getUserStatus,
+  getUserById,
 } from "../controllers/userController.js";
 import { authenticateToken } from "../middlewares/authMiddleware.js";
-import { getUserProfileImage } from "../controllers/getProfileimg.js";
+import { getUserProfile } from "../controllers/getProfileimg.js";
 import { forgotPassword } from "../controllers/forgotPassword.js";
 import { resetPassword } from "../controllers/resetpassword.js";
 import { deleteUser } from "../controllers/deleteUserController.js";
@@ -36,7 +37,8 @@ router.post(
   uploadAvatar
 );
 
-router.get("/profile", authenticateToken, getUserProfileImage);
+router.get("/profile", authenticateToken, getUserProfile);
+router.get("/users/:userId", getUserById); // ✅ This should exist
 
 // Forgot Password Route
 router.post("/forgot-password", forgotPassword);

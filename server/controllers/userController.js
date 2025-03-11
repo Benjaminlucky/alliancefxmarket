@@ -5,6 +5,7 @@ import emailValidator from "email-validator";
 import { sendVerificationEmail } from "../utils/emailUtils.js"; // Ensure you import correctly
 import { authenticateToken } from "../middlewares/authMiddleware.js";
 import generateVerificationToken from "../utils/generateVerificationToken.js";
+import mongoose from "mongoose";
 
 // Register User
 export const registerUser = async (req, res) => {
@@ -272,5 +273,28 @@ export const getUserStatus = async (req, res) => {
     res
       .status(500)
       .json({ error: "An error occurred while fetching the user status" });
+  }
+};
+
+// Get user by ID
+
+export const getUserById = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: "Invalid user ID format" });
+    }
+
+    const user = await User.findById(userId).select("-password"); // Exclude password
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error.message);
+    return res.status(500).json({ error: "Server error" });
   }
 };

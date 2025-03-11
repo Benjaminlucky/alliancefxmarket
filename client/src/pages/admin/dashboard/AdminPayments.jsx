@@ -4,7 +4,6 @@ import { Menu, Transition } from "@headlessui/react";
 function AdminPayments() {
   const [investors, setInvestors] = useState([]);
   const [investmentPlans, setInvestmentPlans] = useState([]);
-  const [investments, setInvestments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -50,27 +49,9 @@ function AdminPayments() {
     fetchData();
   }, [currentPage]);
 
-  const fetchInvestmentPlans = async () => {
-    const API_BASE_URL =
-      window.location.origin === "http://localhost:5173"
-        ? "http://localhost:3000"
-        : "https://alliancefxmarket.onrender.com";
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/admin/investments/`);
-      if (!response.ok) throw new Error("Failed to fetch investment plans");
-
-      const data = await response.json();
-      setInvestmentPlans(data.plans || []);
-    } catch (error) {
-      console.error("Error fetching investment plans:", error);
-    }
-  };
-
   const handleInvestorModal = (investor) => {
     setSelectedInvestor(investor);
     setInvestorModal(true);
-    fetchInvestmentPlans();
   };
 
   const handleActivateInvestor = async () => {
@@ -170,6 +151,41 @@ function AdminPayments() {
                   )}
                 </tbody>
               </table>
+
+              {/* ✅ Pagination Controls */}
+              <div className="flex justify-between items-center mt-6">
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 border rounded-md ${
+                    currentPage === 1
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                  }`}
+                >
+                  Previous
+                </button>
+                <span className="text-gray-700">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) =>
+                      prev < totalPages ? prev + 1 : prev
+                    )
+                  }
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 border rounded-md ${
+                    currentPage === totalPages
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                  }`}
+                >
+                  Next
+                </button>
+              </div>
             </>
           )}
         </div>
@@ -197,10 +213,6 @@ function AdminPayments() {
                 </option>
               ))}
             </select>
-
-            {message && (
-              <p className="text-center text-red-500 mt-2">{message}</p>
-            )}
 
             <div className="flex justify-between mt-6">
               <button

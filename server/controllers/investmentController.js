@@ -116,15 +116,48 @@ export const updateInvestmentPlan = async (req, res) => {
         .json({ success: false, message: "Investment plan not found" });
     }
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Investment plan updated successfully",
-        updatedPlan,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Investment plan updated successfully",
+      updatedPlan,
+    });
   } catch (error) {
     console.error("Error updating investment:", error);
     return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+import UserInvestment from "../models/UserInvestment.js";
+
+export const getUserInvestmentDetails = async (req, res) => {
+  try {
+    // Ensure user is authenticated
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ error: "Unauthorized: No user found" });
+    }
+
+    const userId = req.user._id;
+
+    // Find the most recent investment for the user
+    const investment = await UserInvestment.findOne({ user: userId }).sort({
+      startDate: -1,
+    });
+
+    if (!investment) {
+      return res.status(404).json({ error: "No active investment found" });
+    }
+
+    res.status(200).json({
+      planName: investment.planName,
+      amount: investment.amount,
+      startDate: investment.startDate,
+      maturityDate: investment.maturityDate,
+      roi: investment.roi,
+      expectedPayout: investment.expectedPayout,
+      status: investment.status,
+    });
+  } catch (error) {
+    console.error("Error fetching user investment details:", error);
+    res.status(500).json({ error: "Failed to retrieve investment details" });
   }
 };

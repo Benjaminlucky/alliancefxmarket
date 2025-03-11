@@ -11,8 +11,8 @@ const userSchema = new mongoose.Schema(
     planId: { type: mongoose.Schema.Types.ObjectId, ref: "investmentPlan" },
     amountInvested: { type: Number, default: 0 },
     durationMonths: { type: Number, default: 0 },
-    expectedReturns: { type: Number, default: 0 }, // Ensure expected returns are updated
-    totalPayout: { type: Number }, // Total payout calculation should always update
+    expectedReturns: { type: Number, default: 0 },
+    totalPayout: { type: Number },
     maturityDate: { type: Date },
     status: {
       type: String,
@@ -20,15 +20,15 @@ const userSchema = new mongoose.Schema(
       default: "Active",
     },
     isVerified: { type: Boolean, default: false },
-    verificationToken: { type: String },
+    verificationToken: { type: String }, // Store the token for email verification
     profileImage: {
       type: String,
       default: "https://untitledui.com/images/avatars/natali-craig",
     },
-    resetPasswordToken: { type: String },
-    resetPasswordExpires: { type: Date },
+    resetPasswordToken: { type: String }, // Token for password reset
+    resetPasswordExpires: { type: Date }, // Expiration time for the token
   },
-  { timestamps: true }
+  { timestamps: true } // Enable timestamps
 );
 
 export default mongoose.model("User", userSchema);

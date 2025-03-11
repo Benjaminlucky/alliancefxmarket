@@ -9,6 +9,7 @@ import getCryptoPrice from "./controllers/cryptoPrices.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import fetchUsersRoutes from "./routes/fetchUsers.routes.js";
 import investmentRoutes from "./routes/investmentRoutes.js";
+import planRoutes from "./routes/fetchPlanroutes.js";
 
 // Define __dirname manually for ES module compatibility
 const __filename = fileURLToPath(import.meta.url);
@@ -61,6 +62,7 @@ app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/admin", investmentRoutes);
 app.use("/user", fetchUsersRoutes);
+app.use("/user", investmentRoutes);
 
 app.get("/crypto-price", getCryptoPrice);
 
@@ -76,6 +78,9 @@ app.use(
   "/invoices",
   express.static(path.join(__dirname, "server", "invoices"))
 );
+
+// Use the plan routes
+app.use("/user", planRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
