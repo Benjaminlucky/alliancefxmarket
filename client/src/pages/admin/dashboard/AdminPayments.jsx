@@ -11,7 +11,17 @@ function AdminPayments() {
   const [investorModal, setInvestorModal] = useState(false);
   const [selectedInvestor, setSelectedInvestor] = useState(null);
   const [selectedPlan, setSelectedPlan] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState("");
+  const [manualPlanName, setManualPlanName] = useState("");
+  const [manualAmount, setManualAmount] = useState(0);
+  const [durationDays, setDurationDays] = useState(0); // Changed from months to days
+  const [roiPercentage, setRoiPercentage] = useState(0); // New ROI input
+
+  const API_BASE_URL =
+    window.location.origin === "http://localhost:5173"
+      ? "http://localhost:3000"
+      : "https://alliancefxmarket.onrender.com";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +50,8 @@ function AdminPayments() {
         setInvestmentPlans(plansData.plans || []);
         setTotalPages(investorsData.totalPages || 1);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        setMessage("Error: Investor ID is missing");
+        setMessageType("error");
       } finally {
         setLoading(false);
       }
@@ -48,43 +59,64 @@ function AdminPayments() {
 
     fetchData();
   }, [currentPage]);
+  const showMessage = (text, type) => {
+    setMessage({ text, type });
+    setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+  };
 
   const handleInvestorModal = (investor) => {
     setSelectedInvestor(investor);
     setInvestorModal(true);
   };
 
+  // Handle activation
   const handleActivateInvestor = async () => {
-    if (!selectedInvestor || !selectedPlan) {
-      alert("Please select an investor and an investment plan.");
-      return;
+    if (!selectedInvestor?._id) {
+      console.error("Investor ID is missing");
+      return alert("Error: Investor ID is missing");
     }
 
-    const API_BASE_URL =
-      window.location.origin === "http://localhost:5173"
-        ? "http://localhost:3000"
-        : "https://alliancefxmarket.onrender.com";
+    let requestBody = {
+      userId: selectedInvestor._id,
+      roiPercentage, // Include ROI percentage
+    };
+
+    if (selectedPlan && selectedPlan !== "manual") {
+      requestBody.planId = selectedPlan;
+    } else if (
+      selectedPlan === "manual" &&
+      manualPlanName &&
+      manualAmount &&
+      durationDays
+    ) {
+      requestBody.planName = manualPlanName;
+      requestBody.amountInvested = manualAmount;
+      requestBody.durationDays = parseInt(durationDays, 10); // Ensure it's a number
+    } else {
+      setMessage("Error: Please provide a valid plan, amount, and duration.");
+      setMessageType("error");
+    }
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/admin/investments/activate/${selectedInvestor._id}/${selectedPlan}`,
+        `${API_BASE_URL}/admin/investments/activate`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            investorId: selectedInvestor._id,
-            planId: selectedPlan,
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
-      if (!response.ok) throw new Error("Failed to activate investor");
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.message || "Failed to activate investor");
 
-      alert("Investor activated successfully!");
+      setMessage("Investor activated successfully");
+      setMessageType("success");
       setInvestorModal(false);
     } catch (error) {
-      console.error("Error activating investor:", error);
-      alert("Error activating investor.");
+      setMessage(`Error: ${error.message}`);
+      setMessageType("error");
     }
   };
 
@@ -92,6 +124,15 @@ function AdminPayments() {
     <main>
       <div className="w-full p-6">
         <h3 className="text-3xl font-bold text-gray-500">Manage Deposits</h3>
+        {message && (
+          <div
+            className={`mt-4 p-3 rounded-md text-white transition-opacity duration-500 ${
+              messageType === "success" ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            {message}
+          </div>
+        )}
 
         <div className="relative shadow-md sm:rounded-lg overflow-visible mt-6">
           {loading ? (
@@ -119,10 +160,13 @@ function AdminPayments() {
                           {investor.fullName || "N/A"}
                         </td>
                         <td className="px-6 py-4">
-                          {investmentPlans.find(
-                            (plan) => plan._id === investor.planId
-                          )?.planName || "N/A"}
+                          {investor.planName ||
+                            investmentPlans.find(
+                              (plan) => plan._id === investor.planId
+                            )?.planName ||
+                            "N/A"}
                         </td>
+
                         <td className="px-6 py-4">
                           ${investor.amountInvested || "0.00"}
                         </td>
@@ -197,23 +241,103 @@ function AdminPayments() {
             <h3 className="text-xl font-bold text-gray-700 text-center">
               Activate Investor
             </h3>
-            <p className="text-center text-gray-500 mt-2 py-2">
+            <p className="text-center text-secondary-dark font-bold mt-2 py-2">
               {selectedInvestor.fullName || "Unknown Investor"}
             </p>
 
-            <select
-              className="w-full mt-4 p-2 border rounded-md"
-              value={selectedPlan}
-              onChange={(e) => setSelectedPlan(e.target.value)}
-            >
-              <option value="">Select Investment Plan</option>
-              {investmentPlans.map((plan) => (
-                <option key={plan._id} value={plan._id}>
-                  {plan.planName}
-                </option>
-              ))}
-            </select>
+            {/* Radio Button to Choose Mode */}
+            <div className="flex justify-between mt-4">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="entryMode"
+                  value="auto"
+                  checked={selectedPlan !== "manual"}
+                  onChange={() => setSelectedPlan("")}
+                  className="h-5 w-5 text-secondary-dark border-gray-300 ring-secondary-dark ring-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+                <span className="text-gray-700 font-medium">Choose Plan</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="entryMode"
+                  value="manual"
+                  checked={selectedPlan === "manual"}
+                  onChange={() => setSelectedPlan("manual")}
+                  className="h-5 w-5 text-secondary-dark border-gray-300 ring-2 ring-secondary-dark focus:ring-2 focus:ring-secondary-dark  focus:outline-none"
+                />
+                <span className="text-gray-700 font-medium">
+                  Enter Manually
+                </span>
+              </label>
+            </div>
 
+            {/* If Selecting a Plan */}
+            {selectedPlan !== "manual" && (
+              <select
+                className="w-full mt-4 p-2 border rounded-md"
+                value={selectedPlan}
+                onChange={(e) => setSelectedPlan(e.target.value)}
+              >
+                <option value="">Select Investment Plan</option>
+                {investmentPlans.map((plan) => (
+                  <option key={plan._id} value={plan._id}>
+                    {plan.planName}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {/* If Entering Manually */}
+            {selectedPlan === "manual" && (
+              <div className="mt-8">
+                <label className="block text-gray-700 text-sm font-medium">
+                  Investment Plan Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter Investment Plan Name"
+                  className="w-full p-2 border border-gray-400 ring-2 ring-gray-200 mt-1 rounded-sm focus:ring-2 focus:ring-secondary-dark focus:border-blue-500"
+                  value={manualPlanName}
+                  onChange={(e) => setManualPlanName(e.target.value)}
+                />
+
+                <label className="block text-gray-700 text-sm font-medium mt-5">
+                  Amount Received
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter Amount Received"
+                  className="w-full p-2 text-gray-400 border border-gray-400 ring-2 ring-gray-200 mt-1 rounded-sm focus:ring-2 focus:ring-secondary-dark focus:border-blue-500"
+                  value={manualAmount}
+                  onChange={(e) => setManualAmount(e.target.value)}
+                />
+
+                <label className="block text-gray-700 text-sm font-medium mt-5">
+                  Duration (Days)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter Duration (Days)"
+                  className="w-full p-2 border border-gray-400 ring-2 ring-gray-200 mt-1 rounded-sm focus:ring-2 focus:ring-secondary-dark focus:border-blue-500"
+                  value={durationDays}
+                  onChange={(e) => setDurationDays(e.target.value)}
+                />
+                <label className="block text-gray-700 text-sm font-medium mt-5">
+                  ROI (Return on Investment)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Enter ROI (%)"
+                  className="w-full p-2 border border-gray-400 ring-2 ring-gray-200 mt-1 rounded-sm focus:ring-2 focus:ring-secondary-dark focus:border-blue-500"
+                  value={roiPercentage}
+                  onChange={(e) => setRoiPercentage(e.target.value)}
+                />
+              </div>
+            )}
+
+            {/* Buttons */}
             <div className="flex justify-between mt-6">
               <button
                 onClick={() => setInvestorModal(false)}

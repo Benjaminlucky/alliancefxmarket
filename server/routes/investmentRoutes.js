@@ -23,6 +23,7 @@ router.delete("/investments/:id", deleteInvestmentPlan);
 router.get("/investment-details", authenticateToken, getUserInvestmentDetails);
 
 //New Route to activate an investor
-router.post("/investments/activate/:investorId/:planId", activateInvestor);
+router.post("/investments/activate/", activateInvestor);
+// router.post("/investments/activate/:investorId/:planId", activateInvestor);
 
 export default router;

@@ -9,10 +9,14 @@ const userSchema = new mongoose.Schema(
     country: { type: String, required: false },
     password: { type: String, required: true },
     planId: { type: mongoose.Schema.Types.ObjectId, ref: "investmentPlan" },
+    planName: { type: String },
     amountInvested: { type: Number, default: 0 },
-    durationMonths: { type: Number, default: 0 },
-    expectedReturns: { type: Number, default: 0 }, // Ensure expected returns are updated
-    totalPayout: { type: Number }, // Total payout calculation should always update
+    durationDays: { type: Number, default: 0 }, // Store duration in days
+    durationMonths: { type: Number, default: 0 }, // Store months for calculations
+    expectedReturns: { type: Number, default: 0 },
+    totalPayout: { type: Number },
+    investmentDate: { type: Date, default: Date.now }, // Set when activated
+    returnPercentage: Number, // <-- Add this
     maturityDate: { type: Date },
     status: {
       type: String,

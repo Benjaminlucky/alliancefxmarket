@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setUser, resetUser } from "../redux/slices/Userslice";
+import { resetUser } from "../redux/slices/Userslice";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
@@ -27,7 +27,7 @@ const Profile = () => {
       setError("Authentication token missing.");
       setLoading(false);
     }
-  }, [investmentDetails]);
+  }, []); // ✅ Removed `investmentDetails` to prevent infinite loops
 
   const fetchUser = async (authToken) => {
     try {
@@ -49,42 +49,13 @@ const Profile = () => {
       setProfileImage(data.profileImage || "/default-avatar.png");
       setIsVerified(data.isVerified || false);
 
-      let planName = "No Plan";
-      if (data.planId) {
-        planName = await fetchPlanName(data.planId);
-      }
-
-      setInvestmentDetails({
-        planName,
-        amount: data.amountInvested || 0,
-        expectedReturns: data.expectedReturns || 0,
-        totalPayout: data.totalPayout || 0,
-        investmentDate: data.createdAt
-          ? new Date(data.createdAt).toLocaleDateString()
-          : "N/A",
-        maturityDate: data.maturityDate
-          ? new Date(data.maturityDate).toLocaleDateString()
-          : "N/A",
-      });
-
+      // ✅ Investment details now come directly from the backend
+      setInvestmentDetails(data.investmentDetails || null);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
       setError("Error fetching user profile.");
       setLoading(false);
-    }
-  };
-
-  const fetchPlanName = async (planId) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/user/plans/${planId}`);
-      if (!response.ok) throw new Error("Failed to fetch plan details");
-
-      const planData = await response.json();
-      return planData.plan ? planData.plan.planName : "No Plan";
-    } catch (error) {
-      console.error("Error fetching plan name:", error);
-      return "No Plan";
     }
   };
 
@@ -133,12 +104,16 @@ const Profile = () => {
             <div className="investment flex justify-center items-center font-bold text-gray-600 border border-transparent bg-secondary-light rounded-md hover:text-white hover:bg-transparent hover:border-secondary-light duration-200">
               <div className="investment__content py-4 px-5">
                 <div className="invested__amount text-2xl">
-                  ${investmentDetails.amount.toLocaleString()}
+                  ${investmentDetails.amountInvested.toLocaleString()}
                 </div>
                 <div className="planDate flex items-center gap-5 font-bold">
                   <p>{investmentDetails.planName}</p>
                   <small className="dateInvested font-bold">
-                    {investmentDetails.investmentDate}
+                    {investmentDetails.investmentDate
+                      ? new Date(
+                          investmentDetails.investmentDate
+                        ).toLocaleDateString()
+                      : "N/A"}
                   </small>
                 </div>
               </div>
@@ -151,10 +126,14 @@ const Profile = () => {
                 </div>
                 <div className="percent__date flex gap-5">
                   <div className="percent">
-                    {investmentDetails.expectedReturns}%
+                    {investmentDetails.returnPercentage}%
                   </div>
                   <div className="date font-bold">
-                    {investmentDetails.maturityDate}
+                    {investmentDetails.maturityDate
+                      ? new Date(
+                          investmentDetails.maturityDate
+                        ).toLocaleDateString()
+                      : "N/A"}
                   </div>
                 </div>
               </div>
