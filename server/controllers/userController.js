@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import emailValidator from "email-validator";
 import { sendVerificationEmail } from "../utils/emailUtils.js"; // Ensure you import correctly
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { authenticateToken } from "../middlewares/authMiddleware.js";
 import generateVerificationToken from "../utils/generateVerificationToken.js";
 import mongoose from "mongoose";
 
