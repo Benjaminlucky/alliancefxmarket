@@ -104,7 +104,7 @@ const Profile = () => {
             <div className="investment flex justify-center items-center font-bold text-gray-600 border border-transparent bg-secondary-light rounded-md hover:text-white hover:bg-transparent hover:border-secondary-light duration-200">
               <div className="investment__content py-4 px-5">
                 <div className="invested__amount text-2xl">
-                  ${investmentDetails.amountInvested.toLocaleString()}
+                  ${investmentDetails?.amountInvested?.toLocaleString()}
                 </div>
                 <div className="planDate flex items-center gap-5 font-bold">
                   <p>{investmentDetails.planName}</p>
