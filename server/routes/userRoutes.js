@@ -9,7 +9,7 @@ import {
   getUserStatus,
   getUserById,
 } from "../controllers/userController.js";
-import { authenticateToken } from "../middlewares/authMiddleware.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 import { getUserProfile } from "../controllers/getProfileimg.js";
 import { forgotPassword } from "../controllers/forgotPassword.js";
 import { resetPassword } from "../controllers/resetpassword.js";
@@ -22,22 +22,22 @@ const router = express.Router();
 // User routes
 router.post("/signup", registerUser);
 router.post("/signin", loginUser);
-router.get("/user/:userId", authenticateToken, getUser); // Added authentication for user details
-router.post("/resend-verification", authenticateToken, resendVerificationEmail);
+router.get("/user/:userId", authMiddleware, getUser); // Added authentication for user details
+router.post("/resend-verification", authMiddleware, resendVerificationEmail);
 router.get("/verify/:token", verifyUser);
 router.get("/verify-email", verifyUser);
-router.get("/status", authenticateToken, getUserStatus);
-router.post("/investmentinvoice", authenticateToken, handleInvestment);
+router.get("/status", authMiddleware, getUserStatus);
+router.post("/investmentinvoice", authMiddleware, handleInvestment);
 
 // Avatar upload route
 router.post(
   "/upload-avatar",
-  authenticateToken,
+  authMiddleware,
   upload.single("avatar"),
   uploadAvatar
 );
 
-router.get("/profile", authenticateToken, getUserProfile);
+router.get("/profile", authMiddleware, getUserProfile);
 router.get("/users/:userId", getUserById); // ✅ This should exist
 
 // Forgot Password Route

@@ -8,7 +8,7 @@ import {
   getUserInvestmentDetails, // Import the new function
 } from "../controllers/investmentController.js";
 import { activateInvestor } from "../controllers/activateInvestor.js";
-import { authenticateToken } from "../middlewares/authMiddleware.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.delete("/investments/:id", deleteInvestmentPlan);
 
 // ✅ Route to get user investment details
 // ✅ Ensure the route is correct
-router.get("/investment-details", authenticateToken, getUserInvestmentDetails);
+router.get("/investment-details", authMiddleware, getUserInvestmentDetails);
 
 //New Route to activate an investor
 router.post("/investments/activate/", activateInvestor);

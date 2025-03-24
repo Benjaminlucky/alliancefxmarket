@@ -10,7 +10,7 @@ import fetchUsersRoutes from "./routes/fetchUsers.routes.js";
 import investmentRoutes from "./routes/investmentRoutes.js";
 import planRoutes from "./routes/fetchPlanroutes.js";
 import getCryptoPrice from "./controllers/cryptoPrices.js";
-import authMiddleware from "./middlewares/authMiddleware.js"; // ✅ Authentication middleware
+import { authMiddleware } from "./middlewares/authMiddleware.js";
 
 // Define __dirname for ES module compatibility
 const __filename = fileURLToPath(import.meta.url);
@@ -27,17 +27,18 @@ const app = express();
 
 // ✅ MongoDB Connection
 mongoose
-  .connect(process.env.MONGO)
+  .connect(process.env.MONGO, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("✅ Database connected"))
   .catch((err) => console.error("❌ Database connection error:", err.message));
 
 // ✅ CORS Setup
 const allowedOrigins = [
-  "http://localhost:5173", // Local development
-  "https://alliancefxmarket.netlify.app", // Production frontend
+  "http://localhost:5173",
+  "https://alliancefxmarket.netlify.app",
 ];
-
-app.options("*", cors()); // Handle preflight requests
 
 app.use(
   cors({
@@ -52,7 +53,7 @@ app.use(
 // ✅ Middleware
 app.use(express.json());
 
-// ✅ Debugging Middleware (Logs headers for debugging authentication issues)
+// ✅ Debugging Middleware
 app.use((req, res, next) => {
   console.log("🔍 Request Headers:", req.headers);
   next();
@@ -68,7 +69,7 @@ app.use(
 // ✅ Routes
 app.get("/", (req, res) => res.send("🚀 Welcome to the server!"));
 
-// ✅ Protect user and admin routes using authentication middleware
+// ✅ Protect user and admin routes
 app.use("/user", authMiddleware, userRoutes);
 app.use("/user", authMiddleware, fetchUsersRoutes);
 app.use("/user", authMiddleware, investmentRoutes);
@@ -81,4 +82,6 @@ app.get("/crypto-price", getCryptoPrice);
 
 // ✅ Start the Server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server is running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () =>
+  console.log(`🚀 Server is running on port ${PORT}`)
+);
