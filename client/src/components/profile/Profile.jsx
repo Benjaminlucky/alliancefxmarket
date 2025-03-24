@@ -107,11 +107,11 @@ const Profile = () => {
                   ${investmentDetails?.amountInvested?.toLocaleString()}
                 </div>
                 <div className="planDate flex items-center gap-5 font-bold">
-                  <p>{investmentDetails.planName}</p>
+                  <p>{investmentDetails?.planName}</p>
                   <small className="dateInvested font-bold">
-                    {investmentDetails.investmentDate
+                    {investmentDetails?.investmentDate
                       ? new Date(
-                          investmentDetails.investmentDate
+                          investmentDetails?.investmentDate
                         ).toLocaleDateString()
                       : "N/A"}
                   </small>
