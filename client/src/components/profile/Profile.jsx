@@ -14,10 +14,10 @@ const Profile = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE_URL = window.location.hostname.includes("localhost")
-    ? "http://localhost:3000"
-    : "https://alliancefxmarket.onrender.com";
-
+  const API_BASE_URL =
+    window.location.origin === "http://localhost:5173"
+      ? "http://localhost:3000"
+      : "https://alliancefxmarket.onrender.com";
   useEffect(() => {
     const storedAuthToken = localStorage.getItem("authToken");
 
