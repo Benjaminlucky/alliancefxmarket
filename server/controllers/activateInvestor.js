@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import UserInvestment from "../models/UserInvestment.js";
 import investmentPlan from "../models/investmentModels.js";
 
 export const activateInvestor = async (req, res) => {
@@ -14,21 +15,18 @@ export const activateInvestor = async (req, res) => {
       roiPercentage,
     } = req.body;
 
-    if (!userId) {
+    // Validate required inputs
+    if (!userId)
       return res.status(400).json({ message: "User ID is required" });
-    }
-
-    if (!amountInvested || amountInvested <= 0) {
+    if (!amountInvested || amountInvested <= 0)
       return res.status(400).json({ message: "Invalid investment amount" });
-    }
-    if (!durationDays || durationDays <= 0) {
+    if (!durationDays || durationDays <= 0)
       return res.status(400).json({ message: "Invalid investment duration" });
-    }
 
-    // Convert inputs to numbers
+    // Convert to numbers
     const investmentAmount = Number(amountInvested);
     const durationMonths = durationDays / 30; // Convert days to months
-    let roi = roiPercentage !== undefined ? Number(roiPercentage) / 100 : 0.1; // Convert from % to decimal
+    let roi = roiPercentage !== undefined ? Number(roiPercentage) / 100 : 0.1; // Default 10% ROI
 
     if (isNaN(investmentAmount) || isNaN(roi)) {
       return res
@@ -36,58 +34,79 @@ export const activateInvestor = async (req, res) => {
         .json({ message: "Invalid investment amount or ROI percentage" });
     }
 
-    console.log("ROI Percentage:", roi); // Debugging
+    console.log("ROI Percentage:", roi);
 
+    // Fetch user
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (planId) {
-      const plan = await investmentPlan.findById(planId);
-      if (!plan) {
-        return res.status(404).json({ message: "Investment plan not found" });
-      }
-      user.planId = plan._id;
-      user.planName = plan.name;
-      roi = roiPercentage !== undefined ? roi : plan.roi / 100 || 0.1;
-    } else if (planName) {
-      user.planName = planName;
-      user.planId = null;
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Either planId or planName is required" });
-    }
+    // Calculate maturity date
+    const maturityDate = new Date();
+    maturityDate.setDate(maturityDate.getDate() + durationDays);
 
-    // Store investment details
-    user.amountInvested = investmentAmount;
-    user.durationDays = durationDays;
-    user.investmentDate = new Date();
+    // Calculate expected payout
+    const expectedReturns = Math.round(investmentAmount * roi * durationMonths);
 
-    // **ROI Calculation (Now Uses User's ROI Correctly!)**
-    user.expectedReturns = investmentAmount * roi * durationMonths;
-    user.totalPayout = investmentAmount + user.expectedReturns;
-    user.returnPercentage = roi * 100;
+    const totalPayout = Math.round(investmentAmount + expectedReturns);
 
-    // Debugging Logs
     console.log(
       `Calculating Expected Returns: ${investmentAmount} * ${roi} * ${durationMonths}`
     );
-    console.log("Expected Returns:", user.expectedReturns);
-    console.log("Total Payout:", user.totalPayout);
+    console.log("Expected Returns:", expectedReturns);
+    console.log("Total Payout:", totalPayout);
 
-    // Calculate Maturity Date
-    const maturityDate = new Date();
-    maturityDate.setDate(maturityDate.getDate() + durationDays);
+    // Prepare investment data
+    const investmentData = {
+      user: userId,
+      planName: planName || "Custom Plan",
+      amount: investmentAmount,
+      roi: Math.round(roi * 100),
+      // Store as percentage
+      startDate: new Date(),
+      maturityDate, // Ensuring it's always set
+      expectedPayout: totalPayout, // Ensuring it's always set
+      status: "pending",
+    };
+
+    // If planId is provided, fetch the plan and validate deposit amount
+    if (planId) {
+      const plan = await investmentPlan.findById(planId);
+      if (!plan)
+        return res.status(404).json({ message: "Investment plan not found" });
+
+      if (investmentAmount < plan.minimumDeposit) {
+        return res
+          .status(400)
+          .json({ message: `Minimum deposit is ${plan.minimumDeposit}` });
+      }
+
+      investmentData.planId = plan._id;
+      investmentData.planName = plan.planName;
+    }
+
+    // Update user's investment details
+    user.amountInvested = investmentAmount;
+    user.durationDays = durationDays;
+    user.investmentDate = new Date();
+    user.expectedReturns = expectedReturns;
+    user.totalPayout = totalPayout;
     user.maturityDate = maturityDate;
+    user.returnPercentage = Math.round(roi * 100);
 
+    // Save investment
+    const investment = new UserInvestment(investmentData);
+    await investment.save();
+
+    // Save user updates
     await user.save();
-    return res
-      .status(200)
-      .json({ message: "Investment created successfully", user });
+
+    return res.status(201).json({
+      message: "Investment activated successfully",
+      user,
+      investment,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Investment activation error:", error);
     return res
       .status(500)
       .json({ message: "Server error", error: error.message });

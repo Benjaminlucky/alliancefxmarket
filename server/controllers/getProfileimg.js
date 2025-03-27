@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import UserInvestment from "../models/UserInvestment.js";
 import investmentPlan from "../models/investmentModels.js";
 
 export const getUserProfile = async (req, res) => {
@@ -10,32 +11,51 @@ export const getUserProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Default investment details from the user schema
-    let investmentDetails = {
-      planName: user.planName || "No Plan",
-      amountInvested: user.amountInvested || 0,
-      expectedReturns: user.expectedReturns || 0,
-      totalPayout: user.totalPayout || 0,
-      returnPercentage: user.returnPercentage || 0,
-      investmentDate: user.investmentDate
-        ? user.investmentDate.toISOString()
-        : null,
-      maturityDate: user.maturityDate ? user.maturityDate.toISOString() : null,
-    };
+    // Fetch investment from UserInvestment model
+    const userInvestment = await UserInvestment.findOne({ user: userId }).sort({
+      startDate: -1,
+    }); // Get latest investment if multiple exist
 
-    // If the user has a valid investment plan ID, fetch details from `investmentPlan`
-    if (user.planId) {
-      const plan = await investmentPlan.findById(user.planId);
-      if (plan) {
-        investmentDetails.planName = plan.name || "Investment Plan";
-      }
+    let investmentDetails = null;
+
+    if (userInvestment) {
+      investmentDetails = {
+        planName: userInvestment.planName,
+        amountInvested: userInvestment.amount,
+        expectedReturns: userInvestment.expectedPayout - userInvestment.amount, // ROI Calculation
+        totalPayout: userInvestment.expectedPayout,
+        returnPercentage: userInvestment.roi,
+        investmentDate: userInvestment.startDate
+          ? userInvestment.startDate.toISOString()
+          : null,
+        maturityDate: userInvestment.maturityDate
+          ? userInvestment.maturityDate.toISOString()
+          : null,
+        status: userInvestment.status,
+      };
+    } else if (user.amountInvested > 0) {
+      // If no record in UserInvestment, check User schema
+      investmentDetails = {
+        planName: user.planName || "No Plan",
+        amountInvested: user.amountInvested,
+        expectedReturns: user.expectedReturns || 0,
+        totalPayout: user.totalPayout || 0,
+        returnPercentage: user.roiPercentage || 0,
+        investmentDate: user.investmentDate
+          ? user.investmentDate.toISOString()
+          : null,
+        maturityDate: user.maturityDate
+          ? user.maturityDate.toISOString()
+          : null,
+        status: "Active",
+      };
     }
 
     return res.status(200).json({
       fullName: user.fullName,
       profileImage: user.profileImage,
       isVerified: user.isVerified,
-      investmentDetails, // Ensures investment details are properly structured
+      investmentDetails, // Now includes data from UserInvestment if available
     });
   } catch (error) {
     console.error("Error fetching user profile:", error);

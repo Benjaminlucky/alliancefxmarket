@@ -78,33 +78,26 @@ function AdminPayments() {
 
     let requestBody = {
       userId: selectedInvestor._id,
+      roiPercentage, // Include ROI percentage
     };
 
     if (selectedPlan && selectedPlan !== "manual") {
-      const selectedPlanData = investmentPlans.find(
-        (plan) => plan._id === selectedPlan
-      );
-      if (!selectedPlanData) {
-        setMessage("Error: Selected plan not found.");
-        setMessageType("error");
-        return;
-      }
-
       requestBody.planId = selectedPlan;
-      requestBody.planName = selectedPlanData.planName;
-      requestBody.amountInvested = selectedPlanData.minimumDeposit;
-      requestBody.durationDays = selectedPlanData.minimumDuration;
-      requestBody.roiPercentage = selectedPlanData.minimumReturns;
-    } else if (selectedPlan === "manual" && manualPlanName && manualAmount) {
+    } else if (
+      selectedPlan === "manual" &&
+      manualPlanName &&
+      manualAmount &&
+      durationDays
+    ) {
       requestBody.planName = manualPlanName;
       requestBody.amountInvested = manualAmount;
-      requestBody.durationDays = parseInt(durationDays, 10);
-      requestBody.roiPercentage = parseFloat(roiPercentage);
+      requestBody.durationDays = parseInt(durationDays, 10); // Ensure it's a number
+    } else {
+      setMessage("Error: Please provide a valid plan, amount, and duration.");
+      setMessageType("error");
     }
 
     try {
-      console.log("Request Payload:", JSON.stringify(requestBody, null, 2));
-
       const response = await fetch(
         `${API_BASE_URL}/admin/investments/activate`,
         {
@@ -124,26 +117,6 @@ function AdminPayments() {
     } catch (error) {
       setMessage(`Error: ${error.message}`);
       setMessageType("error");
-    }
-  };
-
-  const handlePlanSelection = (planId) => {
-    setSelectedPlan(planId);
-    if (planId !== "manual") {
-      const selectedPlanData = investmentPlans.find(
-        (plan) => plan._id === planId
-      );
-      if (selectedPlanData) {
-        setManualPlanName(selectedPlanData.planName);
-        setManualAmount(selectedPlanData.minimumDeposit);
-        setDurationDays(selectedPlanData.minimumDuration);
-        setRoiPercentage(selectedPlanData.returnPercentage);
-      }
-    } else {
-      setManualPlanName("");
-      setManualAmount(0);
-      setDurationDays(0);
-      setRoiPercentage(0);
     }
   };
 
@@ -301,19 +274,20 @@ function AdminPayments() {
             </div>
 
             {/* If Selecting a Plan */}
-            <select
-              className="w-full mt-4 p-2 border rounded-md"
-              value={selectedPlan}
-              onChange={(e) => handlePlanSelection(e.target.value)}
-            >
-              <option value="">Select Investment Plan</option>
-              {investmentPlans.map((plan) => (
-                <option key={plan._id} value={plan._id}>
-                  {plan.planName}
-                </option>
-              ))}
-              <option value="manual">Enter Manually</option>
-            </select>
+            {selectedPlan !== "manual" && (
+              <select
+                className="w-full mt-4 p-2 border rounded-md"
+                value={selectedPlan}
+                onChange={(e) => setSelectedPlan(e.target.value)}
+              >
+                <option value="">Select Investment Plan</option>
+                {investmentPlans.map((plan) => (
+                  <option key={plan._id} value={plan._id}>
+                    {plan.planName}
+                  </option>
+                ))}
+              </select>
+            )}
 
             {/* If Entering Manually */}
             {selectedPlan === "manual" && (
