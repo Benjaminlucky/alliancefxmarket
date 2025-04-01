@@ -59,6 +59,7 @@ function Signin({ setIsAuthenticated }) {
         localStorage.setItem("authToken", token);
         localStorage.setItem("isAuthenticated", true);
         localStorage.setItem("fullName", fullName);
+        localStorage.setItem("email", email);
 
         setIsAuthenticated(true); // Update auth state
         navigate(from); // Redirect to the protected page

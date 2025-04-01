@@ -16,6 +16,7 @@ import { resetPassword } from "../controllers/resetpassword.js";
 import { deleteUser } from "../controllers/deleteUserController.js";
 import updateUser from "../controllers/editUserController.js";
 import { handleInvestment } from "../controllers/investmentInvoicegen.js";
+import { withdrawController } from "../controllers/withdrawController.js";
 
 const router = express.Router();
 
@@ -47,5 +48,8 @@ router.post("/resetpassword", resetPassword);
 //Delet User
 router.delete("/deleteuser/:id", deleteUser);
 router.put("/updateuser/:id", updateUser);
+
+// Withdrawal Route
+router.post("/withdraw", authenticateToken, withdrawController);
 
 export default router;
