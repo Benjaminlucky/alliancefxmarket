@@ -753,8 +753,8 @@ export const adminDashboardLinks = [
   },
   {
     id: 4,
-    name: "Manage Plans",
-    link: "/adminDashboard/managePlans",
+    name: "Manage Wallets",
+    link: "/adminDashboard/manageWallets",
     icon: MdTableChart,
   },
   {

@@ -10,8 +10,9 @@ import adminRoutes from "./routes/adminRoutes.js";
 import fetchUsersRoutes from "./routes/fetchUsers.routes.js";
 import investmentRoutes from "./routes/investmentRoutes.js";
 import planRoutes from "./routes/fetchPlanroutes.js";
+import walletsRoutes from "./routes/walletsRoutes.js";
 
-// Define __dirname manually for ES module compatibility
+// Define __filename and __dirname for ES module compatibility
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -32,6 +33,7 @@ mongoose
 
 const allowedOrigins = [
   "http://localhost:5173", // Local development
+  "https://cryptologos.cc/", // Crypto logos
   "https://alliancefxmarket.netlify.app", // Production frontend
 ];
 
@@ -48,8 +50,9 @@ app.use(
 // Handle preflight requests
 app.options("*", cors());
 
-// Middleware to parse incoming requests
-app.use(express.json());
+// ✅ Increased body size limit to handle Base64 image uploads
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // Serve static files (e.g., images)
 app.use("/uploads", express.static("uploads"));
@@ -63,7 +66,9 @@ app.use("/admin", adminRoutes);
 app.use("/admin", investmentRoutes);
 app.use("/user", fetchUsersRoutes);
 app.use("/user", investmentRoutes);
+app.use("/wallets", walletsRoutes);
 
+// Crypto price route
 app.get("/crypto-price", getCryptoPrice);
 
 // ✅ Serve invoices from the "public/invoices" directory
@@ -72,7 +77,7 @@ app.use(
   express.static(path.join(__dirname, "public", "invoices"))
 );
 
-// ✅ Fix: Make sure Express serves invoices from the correct folder
+// ✅ Redundant fallback invoice paths for safety
 app.use("/invoices", express.static(path.join(__dirname, "invoices")));
 app.use(
   "/invoices",

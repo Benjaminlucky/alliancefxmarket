@@ -27,9 +27,10 @@ import Admindashboard from "./pages/admin/dashboard/Admindashboard";
 import Adminusers from "./pages/admin/dashboard/Adminusers";
 import AdminPayments from "./pages/admin/dashboard/adminPayments";
 import Admininvestments from "./pages/admin/dashboard/Admininvestments";
-import Adminplans from "./pages/admin/dashboard/Adminplans";
+
 import AdminSignup from "./pages/admin/AdminSignup";
 import AdminLayout from "./pages/admin/dashboard/Adminlayout";
+import Adminwallets from "./pages/admin/dashboard/Adminwallets";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -127,7 +128,7 @@ function App() {
           <Route path="manageUsers" element={<Adminusers />} />
           <Route path="managePayments" element={<AdminPayments />} />
           <Route path="manageInvestments" element={<Admininvestments />} />
-          <Route path="managePlans" element={<Adminplans />} />
+          <Route path="manageWallets" element={<Adminwallets />} />
           <Route path="signup" element={<AdminSignup />} />
         </Route>
 

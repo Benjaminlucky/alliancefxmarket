@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../redux/slices/Userslice";
 import { useNavigate } from "react-router-dom";
+import { set } from "mongoose";
 
-const Profile = () => {
+const Profile = ({ setInvestmentDetails }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [profileImage, setProfileImage] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
   const [fullName, setFullName] = useState("User");
-  const [investmentDetails, setInvestmentDetails] = useState(null);
+  const [localInvestmentDetails, setLocalInvestmentDetails] = useState(null);
+
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -50,7 +52,12 @@ const Profile = () => {
       setIsVerified(data.isVerified || false);
 
       // ✅ Investment details now come directly from the backend
-      setInvestmentDetails(data.investmentDetails || null);
+      if (setInvestmentDetails) {
+        setInvestmentDetails(data.investmentDetails || null);
+      }
+      setLocalInvestmentDetails(data.investmentDetails || null);
+      setLoading(false);
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -99,19 +106,19 @@ const Profile = () => {
       </div>
 
       <div className="right grid gap-5 grid-cols-1 md:grid-cols-2">
-        {investmentDetails ? (
+        {localInvestmentDetails ? (
           <>
             <div className="investment flex justify-center items-center font-bold text-gray-600 border border-transparent bg-secondary-light rounded-md hover:text-white hover:bg-transparent hover:border-secondary-light duration-200">
               <div className="investment__content py-4 px-5">
                 <div className="invested__amount text-2xl">
-                  ${investmentDetails?.amountInvested?.toLocaleString()}
+                  ${localInvestmentDetails?.amountInvested?.toLocaleString()}
                 </div>
                 <div className="planDate flex items-center gap-5 font-bold">
-                  <p>{investmentDetails?.planName}</p>
+                  <p>{localInvestmentDetails?.planName}</p>
                   <small className="dateInvested font-bold">
-                    {investmentDetails?.investmentDate
+                    {localInvestmentDetails?.investmentDate
                       ? new Date(
-                          investmentDetails?.investmentDate
+                          localInvestmentDetails?.investmentDate
                         ).toLocaleDateString()
                       : "N/A"}
                   </small>
@@ -122,16 +129,16 @@ const Profile = () => {
             <div className="TotalexpectedROI font-bold text-black bg-secondary-light rounded-md border border-transparent hover:text-white hover:bg-transparent hover:border-secondary-light duration-200">
               <div className="totalroi__content justify-center items-center py-4 px-5">
                 <div className="total__payout text-2xl">
-                  ${investmentDetails.totalPayout.toLocaleString()}
+                  ${localInvestmentDetails.totalPayout.toLocaleString()}
                 </div>
                 <div className="percent__date flex gap-5">
                   <div className="percent">
-                    {investmentDetails.returnPercentage}%
+                    {localInvestmentDetails.returnPercentage}%
                   </div>
                   <div className="date font-bold">
-                    {investmentDetails.maturityDate
+                    {localInvestmentDetails.maturityDate
                       ? new Date(
-                          investmentDetails.maturityDate
+                          localInvestmentDetails.maturityDate
                         ).toLocaleDateString()
                       : "N/A"}
                   </div>
