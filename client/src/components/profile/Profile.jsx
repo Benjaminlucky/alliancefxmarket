@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { resetUser } from "../redux/slices/Userslice";
 import { useNavigate } from "react-router-dom";
-import { set } from "mongoose";
 
 const Profile = ({ setInvestmentDetails }) => {
   const dispatch = useDispatch();
