@@ -21,7 +21,7 @@ router.get("/getWallets", verifyAdmin, getWallets);
 router.get("/getWalletsInvestors", getWallets);
 
 // Update a wallet
-router.put("/updateWallets/:id", authenticateToken, updateWallet);
+router.patch("/updateWallets/:id", verifyAdmin, updateWallet);
 
 // Delete a wallet
 router.delete("/deleteWallets/:id", verifyAdmin, deleteWallet);

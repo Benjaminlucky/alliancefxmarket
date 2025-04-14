@@ -6,6 +6,7 @@ function AdminWallets() {
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [editWalletAddress, setEditWalletAddress] = useState("");
   const [editWalletIcon, setEditWalletIcon] = useState("");
+  const [editName, setEditWalletName] = useState("");
 
   // Add modal states
   const [addModal, setAddModal] = useState(false);
@@ -48,17 +49,57 @@ function AdminWallets() {
     setEditModal(true);
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditWalletIcon(reader.result); // Base64 string
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSaveEdit = async () => {
     try {
-      const updated = wallets.map((w) =>
-        w._id === selectedWallet._id
-          ? { ...w, address: editWalletAddress, logo: editWalletIcon }
-          : w
+      const adminToken = localStorage.getItem("adminToken");
+      const API_BASE_URL =
+        window.location.origin === "http://localhost:5173"
+          ? "http://localhost:3000"
+          : "https://alliancefxmarket.onrender.com";
+
+      const response = await fetch(
+        `${API_BASE_URL}/wallets/updateWallets/${selectedWallet._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${adminToken}`,
+          },
+          body: JSON.stringify({
+            name: editName,
+            address: editWalletAddress,
+            logo: editWalletIcon, // base64 string
+          }),
+        }
       );
-      setWallets(updated);
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update wallet");
+      }
+
+      // Update wallet in local state
+      const updatedWallets = wallets.map((wallet) =>
+        wallet._id === selectedWallet._id ? data : wallet
+      );
+
+      setWallets(updatedWallets);
       setEditModal(false);
       showMessage("Wallet updated successfully!");
     } catch (error) {
+      console.error("Update Wallet Error:", error.message);
       showMessage("Failed to update wallet", "error");
     }
   };
@@ -286,6 +327,17 @@ function AdminWallets() {
             <h3 className="text-lg font-bold mb-12">Edit Wallet</h3>
 
             <label className="block text-sm font-medium text-gray-700 mb-1">
+              Name
+            </label>
+            <input
+              type="text"
+              placeholder="Wallet Name"
+              value={editName}
+              onChange={(e) => setEditWalletName(e.target.value)}
+              className="w-full mb-4 px-4 py-2 border rounded text-gray-500"
+            />
+
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Wallet Address
             </label>
             <input
@@ -297,13 +349,12 @@ function AdminWallets() {
             />
 
             <label className="block text-sm font-medium text-gray-700 mt-6">
-              Coin Logo (URL)
+              Coin Logo (Upload)
             </label>
             <input
-              type="text"
-              placeholder="Icon URL"
-              value={editWalletIcon}
-              onChange={(e) => setEditWalletIcon(e.target.value)}
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e)}
               className="w-full mb-12 p-2 border rounded text-gray-500"
             />
 
@@ -365,7 +416,7 @@ function AdminWallets() {
               placeholder="e.g. Bitcoin"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full mb-4 p-2 border rounded text-gray-500"
+              className="w-full mb-4 p-2 border ring-2 ring-gray-300 mb-8  rounded text-gray-500 focus:ring-2 focus:ring-secondary-light "
             />
 
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -376,7 +427,7 @@ function AdminWallets() {
               placeholder="Wallet Address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full mb-4 p-2 border rounded text-gray-500"
+              className="w-full mb-4 p-2 border rounded ring-2 ring-gray-300 mb-8 text-gray-500 focus:ring-2 focus:ring-secondary-light"
             />
 
             <label className="block text-sm font-medium text-gray-700 mb-2">

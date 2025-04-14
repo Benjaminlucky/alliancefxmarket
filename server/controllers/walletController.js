@@ -15,11 +15,12 @@ export const getWallets = async (req, res) => {
 export const updateWallet = async (req, res) => {
   try {
     const { id } = req.params;
-    const { address, icon, name } = req.body;
+    const { name, address, logo } = req.body;
+    console.log(req.body); // Optional: remove in production
 
     const updated = await walletModels.findByIdAndUpdate(
       id,
-      { address, logo: icon, name },
+      { name, address, logo },
       { new: true }
     );
 
@@ -28,6 +29,7 @@ export const updateWallet = async (req, res) => {
     res.status(500).json({ message: "Error updating wallet." });
   }
 };
+
 // controllers/walletController.js
 export const deleteWallet = async (req, res) => {
   const { id } = req.params;
