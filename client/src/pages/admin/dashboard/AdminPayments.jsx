@@ -188,8 +188,8 @@ function AdminPayments() {
                         </td>
                         <td className="px-6 py-4">
                           {investor.planName ||
-                            investmentPlans.find(
-                              (plan) => plan._id === investor.planId
+                            investmentPlans?.find(
+                              (plan) => plan?._id === investor?.planId
                             )?.planName ||
                             "N/A"}
                         </td>

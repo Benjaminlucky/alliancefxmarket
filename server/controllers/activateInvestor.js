@@ -71,6 +71,7 @@ export const activateInvestor = async (req, res) => {
     // If planId is provided, fetch the plan and validate deposit amount
     if (planId) {
       const plan = await investmentPlan.findById(planId);
+      user.planId = plan._id;
       if (!plan)
         return res.status(404).json({ message: "Investment plan not found" });
 
@@ -92,6 +93,7 @@ export const activateInvestor = async (req, res) => {
     user.totalPayout = totalPayout;
     user.maturityDate = maturityDate;
     user.returnPercentage = Math.round(roi * 100);
+    user.planName = investmentData.planName;
 
     // Save investment
     const investment = new UserInvestment(investmentData);

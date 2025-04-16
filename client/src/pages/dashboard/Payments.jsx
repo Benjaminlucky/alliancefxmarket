@@ -129,6 +129,31 @@ function Payments() {
           ) : (
             <p className="text-gray-400 text-center mt-6">No Wallet Balance</p>
           )}
+          <div className="bg-yellow-100 border-l-4 my-12 border-yellow-500 text-yellow-800 p-4 rounded-lg text-sm sm:text-base max-w-2xl mx-auto mt-4">
+            <p className="font-semibold mb-2">
+              ⚠️ No Refunds on Cryptocurrency Payments
+            </p>
+            <p className="mb-2">
+              Please note that{" "}
+              <span className="font-bold uppercase">no refunds</span> are
+              possible for cryptocurrency payment issues such as:
+            </p>
+            <ul className="list-disc list-inside mb-2 space-y-1">
+              <li>You made a typo</li>
+              <li>You did not send to the correct address</li>
+              <li>You sent more than one payment</li>
+              <li>You sent the wrong cryptocurrency</li>
+            </ul>
+            <p className="mb-2">
+              Orders are valid for a limited amount of time. If you cannot
+              initiate or broadcast the payment within the timeframe shown
+              above, please start a new order.
+            </p>
+            <p className="mb-0">
+              Cryptocurrency payment speed can vary due to network congestion
+              and mining fees. Please plan accordingly.
+            </p>
+          </div>
 
           <table className="w-full text-sm text-left text-gray-500">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">

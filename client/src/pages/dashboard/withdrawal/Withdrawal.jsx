@@ -135,12 +135,12 @@ function Withdrawal() {
                         </p>
                       </div>
 
-                      <div className="withdrawButton flex bg-white gap-3 justify-center items-center py-2 px-5 rounded-full cursor-pointer hover:bg-secondary-light">
+                      {/* <div className="withdrawButton flex bg-white gap-3 justify-center items-center py-2 px-5 rounded-full cursor-pointer hover:bg-secondary-light">
                         <BiSolidDownload className="bg-black h-10 w-10 rounded-full p-2  rotate-180" />
                         <p className="text-black font-semibold text-xl">
                           Invest
                         </p>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>
@@ -164,12 +164,18 @@ function Withdrawal() {
             </button>
             <h2 className="text-xl font-bold py-7">Withdrawal Request</h2>
             <label>Amount</label>
-            <input
-              type="number"
-              value={withdrawAmount}
-              onChange={(e) => setWithdrawAmount(e.target.value)}
-              className="border p-2 w-full border-gray-300 rounded-md text-gray-500 font-bold ring-2 ring-gray-300 focus:ring-2 focus:ring-secondary-light my-3 mb-8"
-            />
+            <div className="relative my-3 mb-8">
+              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 font-bold">
+                $
+              </span>
+              <input
+                type="number"
+                value={withdrawAmount}
+                onChange={(e) => setWithdrawAmount(e.target.value)}
+                className="pl-8 border p-2 w-full border-gray-300 rounded-md text-gray-500 font-bold ring-2 ring-gray-300 focus:ring-2 focus:ring-secondary-light"
+              />
+            </div>
+
             <label className="">Wallet Address</label>
             <input
               type="text"
