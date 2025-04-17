@@ -32,6 +32,9 @@ import AdminSignup from "./pages/admin/AdminSignup";
 import AdminLayout from "./pages/admin/dashboard/Adminlayout";
 import Adminwallets from "./pages/admin/dashboard/Adminwallets";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("isAuthenticated") === "true"
@@ -135,6 +138,7 @@ function App() {
         {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <ToastContainer position="top-right" autoClose={3000} />
     </Router>
   );
 }

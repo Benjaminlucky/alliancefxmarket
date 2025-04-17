@@ -17,6 +17,7 @@ import { deleteUser } from "../controllers/deleteUserController.js";
 import updateUser from "../controllers/editUserController.js";
 import { handleInvestment } from "../controllers/investmentInvoicegen.js";
 import { withdrawController } from "../controllers/withdrawController.js";
+import { updateProfileImage } from "../controllers/updateProfileImage.js";
 
 const router = express.Router();
 
@@ -40,6 +41,8 @@ router.post(
 
 router.get("/profile", authenticateToken, getUserProfile);
 router.get("/users/:userId", getUserById); // ✅ This should exist
+
+router.put("/profile-image", authenticateToken, updateProfileImage);
 
 // Forgot Password Route
 router.post("/forgot-password", forgotPassword);

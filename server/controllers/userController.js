@@ -222,26 +222,26 @@ export const verifyUser = async (req, res) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(decoded.userId); // Retrieve user from DB
+    const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
     if (user.isVerified) {
-      return res.status(400).json({ error: "Email already verified" });
+      return res.redirect(
+        `${process.env.CLIENT_BASE_URL}/signin?verified=already`
+      );
     }
 
-    user.isVerified = true; // Mark as verified
+    user.isVerified = true;
     await user.save();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Email successfully verified." });
+    return res.redirect(`${process.env.CLIENT_BASE_URL}/login?verified=true`);
   } catch (error) {
     console.error("Token verification failed:", error);
-    res.status(400).json({ error: "Invalid or expired verification token." });
+    return res.redirect(`${process.env.CLIENT_BASE_URL}/login?verified=false`);
   }
 };
 

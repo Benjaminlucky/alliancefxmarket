@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { testimony } from "../../data.js";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import eye icons for toggle
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Signin({ setIsAuthenticated }) {
   const navigate = useNavigate();
@@ -54,23 +55,21 @@ function Signin({ setIsAuthenticated }) {
       if (data.success) {
         const { user_id, token, fullName } = data;
 
-        // Save token and user details to localStorage
         localStorage.setItem("userId", user_id);
         localStorage.setItem("authToken", token);
         localStorage.setItem("isAuthenticated", true);
         localStorage.setItem("fullName", fullName);
         localStorage.setItem("email", email);
 
-        setIsAuthenticated(true); // Update auth state
-        navigate(from); // Redirect to the protected page
+        setIsAuthenticated(true);
+        toast.success("Login successful! Redirecting...");
+        navigate(from);
       } else {
-        setError(data.message || "Login failed");
+        toast.error(data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError(error.message || "An error occurred during login.");
-    } finally {
-      setLoading(false);
+      toast.error(error.message || "An error occurred during login.");
     }
   };
 

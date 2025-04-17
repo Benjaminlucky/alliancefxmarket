@@ -23,6 +23,7 @@ import { FaPiggyBank } from "react-icons/fa6";
 import { IoIosPeople } from "react-icons/io";
 import { MdTableChart } from "react-icons/md";
 import { FaBitcoinSign } from "react-icons/fa6";
+import { IoMdLogOut } from "react-icons/io";
 
 export const links = [
   {
@@ -325,6 +326,11 @@ export const dashnavigation = [
     label: "Withdrawals",
     link: "/withdrawal",
     icon: FaMoneyBillTransfer,
+  },
+  {
+    label: "Log Out",
+    link: "/logout",
+    icon: IoMdLogOut,
   },
 ];
 

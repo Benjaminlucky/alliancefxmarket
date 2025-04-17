@@ -11,14 +11,17 @@ const Profile = ({ setInvestmentDetails }) => {
   const [isVerified, setIsVerified] = useState(false);
   const [fullName, setFullName] = useState("User");
   const [localInvestmentDetails, setLocalInvestmentDetails] = useState(null);
-
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [resending, setResending] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [verificationMessage, setVerificationMessage] = useState("");
 
   const API_BASE_URL =
     window.location.origin === "http://localhost:5173"
       ? "http://localhost:3000"
       : "https://alliancefxmarket.onrender.com";
+
   useEffect(() => {
     const storedAuthToken = localStorage.getItem("authToken");
 
@@ -28,7 +31,7 @@ const Profile = ({ setInvestmentDetails }) => {
       setError("Authentication token missing.");
       setLoading(false);
     }
-  }, []); // ✅ Removed `investmentDetails` to prevent infinite loops
+  }, []);
 
   const fetchUser = async (authToken) => {
     try {
@@ -50,13 +53,10 @@ const Profile = ({ setInvestmentDetails }) => {
       setProfileImage(data.profileImage || "/default-avatar.png");
       setIsVerified(data.isVerified || false);
 
-      // ✅ Investment details now come directly from the backend
       if (setInvestmentDetails) {
         setInvestmentDetails(data.investmentDetails || null);
       }
       setLocalInvestmentDetails(data.investmentDetails || null);
-      setLoading(false);
-
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -65,10 +65,69 @@ const Profile = ({ setInvestmentDetails }) => {
     }
   };
 
-  const handleSignOut = () => {
-    dispatch(resetUser());
-    localStorage.clear();
-    navigate("/signin");
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+        uploadImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (base64Image) => {
+    const authToken = localStorage.getItem("authToken");
+    setUploading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/profile-image`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ profileImage: base64Image }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+      console.log("Profile image updated");
+    } catch (err) {
+      console.error(err);
+      setError("Image upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    const authToken = localStorage.getItem("authToken");
+    setResending(true);
+    setVerificationMessage("");
+    try {
+      const response = await fetch(`${API_BASE_URL}/user/resend-verification`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setVerificationMessage("Verification email sent successfully!");
+      } else {
+        setVerificationMessage(
+          result.error || "Failed to send verification email."
+        );
+      }
+    } catch (error) {
+      console.error("Error sending verification email:", error);
+      setVerificationMessage("An error occurred. Try again later.");
+    } finally {
+      setResending(false);
+    }
   };
 
   return (
@@ -86,20 +145,49 @@ const Profile = ({ setInvestmentDetails }) => {
                 alt="Profile Avatar"
                 className="w-20 h-20 rounded-full object-cover border-2 border-gray-500"
               />
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute top-0 left-0 w-20 h-20 opacity-0 cursor-pointer"
+                onChange={handleImageUpload}
+                title="Upload Profile Image"
+              />
+              {uploading && (
+                <p className="text-sm text-blue-400 mt-2 animate-pulse">
+                  Uploading...
+                </p>
+              )}
             </div>
+
             <div className="mt-4 text-left">
               <h2 className="font-bold text-2xl">{`Hello, ${fullName}`}</h2>
               <p className="text-gray-400">
                 Track your investment journey here
               </p>
-              <p>Status: {isVerified ? "Verified" : "Not Verified"}</p>
+              <p
+                className={`font-semibold ${
+                  isVerified ? "text-green-500" : "text-red-400"
+                }`}
+              >
+                Status: {isVerified ? "Verified" : "Not Verified"}
+              </p>
+              {!isVerified && (
+                <>
+                  <button
+                    onClick={handleResendVerification}
+                    className="mt-2 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded"
+                    disabled={resending}
+                  >
+                    {resending ? "Sending..." : "Verify Your Email"}
+                  </button>
+                  {verificationMessage && (
+                    <p className="text-sm text-green-300 mt-1">
+                      {verificationMessage}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
-            <button
-              onClick={handleSignOut}
-              className="mt-8 bg-red-600 hover:bg-red-700 text-white px-6 py-2 ml-10 rounded-md transition"
-            >
-              Sign Out
-            </button>
           </div>
         )}
       </div>
