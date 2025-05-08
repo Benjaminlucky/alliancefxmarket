@@ -35,7 +35,7 @@ const allowedOrigins = [
   "http://localhost:5173", // Local development
   "https://cryptologos.cc/", // Crypto logos
   "https://alliancefxmarket.netlify.app", // Staging
-  "https://tunofexfxmarket.com/",
+  "https://tunofexfxmarket.com",
 ];
 
 // CORS setup
