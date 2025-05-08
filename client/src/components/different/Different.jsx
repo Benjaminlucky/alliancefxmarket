@@ -8,7 +8,7 @@ function Different() {
         <div className="left w-full flex-1 ">
           <div className="title  lg:pr-16 flex justify-center text-center">
             <h1 className="font-extrabold text-2xl text-center md:text-6xl lg:text-6xl lg:leading-normal">
-              What Makes Alliance-Fx Market Different?
+              What Makes Tunofexfx Market Different?
             </h1>
           </div>
         </div>

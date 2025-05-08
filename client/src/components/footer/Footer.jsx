@@ -2,7 +2,7 @@ import React from "react";
 import { Footer } from "flowbite-react";
 import { contact, documents, usefulLinks } from "../../data";
 import { Link } from "react-router-dom";
-import './footer.css'
+import "./footer.css";
 import Ticker from "../marketTicker/Ticker";
 import TradingViewWidget from "../marketTicker/Ticker";
 import TradingViewTicker from "../marketTicker/Ticker";
@@ -82,17 +82,16 @@ function Footercomp() {
       <div className="bottom flex w-full bg-black text-white  justify-center">
         <div className="copyright w-4/5 flex justify-center">
           <p className="flex text-center py-5 text-gray-400">
-            &copy; 2024 All AllianceFX Market. All Rights Reserved.
+            &copy; 2024 All Tunofexfx Market. All Rights Reserved.
           </p>
         </div>
       </div>
       <div className="whatsapp">
-        <WhatsAppChat/>
+        <WhatsAppChat />
       </div>
       <div>
-      <TradingViewTicker/>
+        <TradingViewTicker />
       </div>
-
     </footer>
   );
 }
