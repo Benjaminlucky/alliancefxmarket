@@ -82,7 +82,7 @@ function Footercomp() {
       <div className="bottom flex w-full bg-black text-white  justify-center">
         <div className="copyright w-4/5 flex justify-center">
           <p className="flex text-center py-5 text-gray-400">
-            &copy; 2024 All Tunofexfx Market. All Rights Reserved.
+            &copy; 2024 All Tunofex Fx Market. All Rights Reserved.
           </p>
         </div>
       </div>

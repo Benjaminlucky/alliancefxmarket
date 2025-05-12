@@ -284,7 +284,7 @@ export const documents = [
 export const contact = [
   {
     address:
-      "Tunofexfx Markets, 70 w. Madison Street, Ste. 1400 Chicago, 1160602",
+      "Tunofex Fx Market, 70 w. Madison Street, Ste. 1400 Chicago, 1160602",
   },
   {
     address: "support@tunofexfxmarket.com",
