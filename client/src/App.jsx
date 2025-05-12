@@ -85,6 +85,8 @@ function App() {
           }
         />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/admin-signup" element={<AdminSignup />} />
+
         <Route
           path="/admin"
           element={<Admin setIsAdminAuthenticated={setIsAdminAuthenticated} />}
@@ -132,7 +134,7 @@ function App() {
           <Route path="managePayments" element={<AdminPayments />} />
           <Route path="manageInvestments" element={<Admininvestments />} />
           <Route path="manageWallets" element={<Adminwallets />} />
-          <Route path="signup" element={<AdminSignup />} />
+          {/* <Route path="signup" element={<AdminSignup />} /> */}
         </Route>
 
         {/* Fallback Route */}
